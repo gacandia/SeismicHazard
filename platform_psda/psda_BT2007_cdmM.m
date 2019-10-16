@@ -6,6 +6,7 @@ function[lambdaD]=psda_BT2007_cdmM(Ts_param, ky_param, psda_param,im,M,dPm,Cz,va
 
 %%
 d      = psda_param.d;
+dPm    = horzcat(dPm{:});
 realSa = psda_param.realSa;
 realD  = psda_param.realD;
 Nd     = length(d);     % N° of displacement values of lambdaD
@@ -27,20 +28,22 @@ if length(ky_param)==2, ky_param = [ky_param,100]; end; Nky = ky_param(3);
 [ky,Ts]  = meshgrid(trlognpdf_psda(ky_param),trlognpdf_psda(Ts_param));
 ky       = ky(:)';
 Ts       = Ts(:)';
+Nmag     = length(M);
+lnd      = zeros(Nim,Nky*NTs,Nmag);
+Tlow     = Ts<0.05;
 
-Nmag = length(M);
-lnd  = zeros(Nim,Nky*NTs,Nmag);
-Tlow = Ts<0.05;
 for m=1:Nmag
     for j=1:Nim
         lnd(j, Tlow,m) = -0.22-2.83*log(ky( Tlow))-0.333*(log(ky( Tlow))).^2+0.566*log(ky( Tlow))*log(im(j))+3.04*log(im(j))-0.244*(log(im(j))).^2+1.5*Ts( Tlow)+ 0.278*(M(m)-7);
         lnd(j,~Tlow,m) = -1.10-2.83*log(ky(~Tlow))-0.333*(log(ky(~Tlow))).^2+0.566*log(ky(~Tlow))*log(im(j))+3.04*log(im(j))-0.244*(log(im(j))).^2+1.5*Ts(~Tlow)+ 0.278*(M(m)-7);
     end
 end
+
 mean_d  = mean(lnd, 2);
 std_d   = std(lnd,[], 2);
 sigmaD  = 0.67;
-logd    = log(d);
+logd    = log(d(:));
+
 switch psda_param.method
     case 'MC'
         %         WORK IN  PROGRESS
@@ -88,7 +91,6 @@ switch psda_param.method
         PC_term_3_summed = zeros(1, Nd);
         PC_term_4_summed = zeros(1, Nd);
         
-        logd = log(d(:));
         for m=1:length(M)
             for i = 1:Nim
                 A_s = - std_d(i,1,m)^2/(2*sigmaD^2) - 1/2;
@@ -101,11 +103,11 @@ switch psda_param.method
                 PC_term_4_array(i,:) = 1/24* (std_d(i,1,m)/(sigmaD *2*pi) .* (sqrt(pi)*(-B_s).*(6*A_s*(1 + 2*A_s) - B_s.^2)/(8*(-A_s)^(7/2))).* exp(C_s -B_s.^2/(4*A_s)))*dlambdaPC(i);
             end
             
-            PC_term_0_summed = PC_term_0_summed + sum(PC_term_0_array ,1) * dPm(m); % sums over the rows
-            PC_term_1_summed = PC_term_1_summed + sum(PC_term_1_array ,1) * dPm(m);
-            PC_term_2_summed = PC_term_2_summed + sum(PC_term_2_array ,1) * dPm(m);
-            PC_term_3_summed = PC_term_3_summed + sum(PC_term_3_array ,1) * dPm(m);
-            PC_term_4_summed = PC_term_4_summed + sum(PC_term_4_array ,1) * dPm(m);
+            PC_term_0_summed = PC_term_0_summed + dPm(m,:)*PC_term_0_array; % sums over the rows
+            PC_term_1_summed = PC_term_1_summed + dPm(m,:)*PC_term_1_array;
+            PC_term_2_summed = PC_term_2_summed + dPm(m,:)*PC_term_2_array;
+            PC_term_3_summed = PC_term_3_summed + dPm(m,:)*PC_term_3_array;
+            PC_term_4_summed = PC_term_4_summed + dPm(m,:)*PC_term_4_array;
         end
         
         lambdaD = zeros(realSa*realD,Nd);

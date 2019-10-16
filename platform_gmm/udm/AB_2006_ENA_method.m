@@ -20,7 +20,6 @@ function var=AB_2006_ENA_method
 
 var.syntax    = 'AB_2006_ENA(T, M,Rcd, stress, Vs30)';
 var.vector    = false;
-var.units     = 1;
 var.residuals = 'lognormal';
 var.IM        = struct('control' , 'system' , 'type' , 'double' , 'tag' , 'IM',         'value' , [-1 0.025 0.031 0.04 0.05 0.063 0.079 0.1 0.125 0.158 0.199 0.251 0.315 0.397 0.5 0.629 0.794 1 1.25 1.59 2 2.5 3.13 4 5]);
 var.M         = struct('control' , 'system' , 'type' , 'double' , 'tag' , 'Magnitude',  'value' , []);

@@ -142,7 +142,8 @@ ky    :   mean 0.14 cov 0.2 samples 0
 Ts    :   mean 0.33 cov 0.1 samples 0
 
 Option 11 Library of Slope Displacement Models
-CDM1 handle psda_BT2007_cdm
+CDM1 handle psda_BMT2017_cdmM
+CDM2 handle psda_BT2007_cdm
 
 Option 13 Slope Displacement Models with PC
-SLpce1 hazard 1 1 1 meanky 0.14 covky 0.2 meanTs 0.33 covTs 0.1 interface CDM1 intraslab CDM1 crustal CDM1 grid CDM1
+SLpce1 hazard 1 1 1 meanky 0.14 covky 0.2 meanTs 0.33 covTs 0.1 interface CDM1 intraslab CDM1 crustal CDM2 grid CDM2

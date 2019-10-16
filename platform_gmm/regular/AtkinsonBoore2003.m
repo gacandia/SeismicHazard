@@ -169,4 +169,6 @@ tau    = s1*ones(size(M));
 sig    = sqrt(sigma.^2-tau.^2);
 lny    = log(10)*(C(1)+C(2)*M + C(3)*h+ C(4)*R - g.*log10(R) + C(5)*sl*SC+C(6)*sl*SD+C(7)*sl*SE);
 
+% convert cm/s2 to g's
+lny    = lny-log(980.66);
 

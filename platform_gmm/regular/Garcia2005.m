@@ -7,9 +7,21 @@ function[lny,sigma,tau,sig]=Garcia2005(To,M,Rrup,Rhyp,H,direction)
 % H         = focal depth
 % mechanism = 'horizontal' or 'vertical'
 
-if To>=0
-    To      = max(To,0.01); %PGA is associated to To=0.01;
+if  and(To<0 || To> 5,To~=-1)
+    lny   = nan(size(M));
+    sigma = nan(size(M));
+    tau   = nan(size(M));
+    sig   = nan(size(M));
+    %IM    = IM2str(To);
+    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
+    %uiwait(h);
+    return
 end
+
+if To>=0
+   To      = max(To,0.01); %PGA is associated to To=0.01;
+end
+
 period  = [-1;0.01;1/25;1/20;1/13.33;1/10;1/5;1/3.33;1/2.5;1/2;1/1.33;1/1;1/0.67;1/0.5;1/0.33;1/0.25;1/0.2];
 T_lo    = max(period(period<=To));
 T_hi    = min(period(period>=To));
@@ -84,7 +96,13 @@ Rcld         = Rrup;
 Rcld(M<=6.5) = Rhyp(M<=6.5);
 Delta  = 0.00750*10.^(0.507*M);
 R      = sqrt(Rcld.^2+Delta.^2);
-lnIM   = (c1+c2*M+c3*R-c4*log10(R)+c5*H)*log(10);
+lnIM   = (c1+c2*M+c3*R-c4*log10(R)+c5*H)*log(10); % log10 to ln
+
+% convert cm/s2 to g's, and keeps cm/s for PGV
+if index~=1
+    lnIM    = lnIM-log(980.66);
+end
+
 tau    = se*ones(size(M));
 phi    = sr*ones(size(M));
 sigma  = sqrt(tau.^2+phi.^2);

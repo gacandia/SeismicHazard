@@ -15,7 +15,7 @@ if group ==1
     i=i+1; ME(i).label = 'McVerry et al. 2006';          ME(i).func = @Mcverry2006;                ME(i).type='regular';  ME(i).ref='http://www.nzsee.org.nz/db/Bulletin/Archive/39(1)0001.pdf';
     i=i+1; ME(i).label = 'Boroschek et al. 2012';        ME(i).func = @ContrerasBoroschek2012;     ME(i).type='regular';  ME(i).ref='https://nisee.berkeley.edu/elibrary/files/documents/elib/www/documents/201204/PISELL/boroschek-maule-eq.pdf';
     i=i+1; ME(i).label = 'Abrahamson et al. 2016';       ME(i).func = @BCHydro2012;                ME(i).type='regular';  ME(i).ref='https://doi.org/10.1193/051712EQS188MR';
-    i=i+1; ME(i).label = 'Arteta et al. 2018';           ME(i).func = @Arteta2018;                 ME(i).type='regular';  ME(i).ref='www.google.com';
+    i=i+1; ME(i).label = 'Arteta et al. 2018';           ME(i).func = @Arteta2018;                 ME(i).type='regular';  ME(i).ref='https://doi.org/10.1193/102116EQS176M';
     i=i+1; ME(i).label = 'Idini et al. 2016';            ME(i).func = @Idini2016;                  ME(i).type='regular';  ME(i).ref='https://doi.org/10.1007/s10518-016-0050-1';
     i=i+1; ME(i).label = 'Montalva et al. 2017';         ME(i).func = @MontalvaBastias2017;        ME(i).type='regular';  ME(i).ref='https://doi.org/10.1785/0120160221';
     i=i+1; ME(i).label = 'SIBER-RISK 2019';              ME(i).func = @SiberRisk2019;              ME(i).type='regular';  ME(i).ref='www.google.com';
@@ -104,7 +104,7 @@ if group == 5
     
     % shallow crustal (other)
     i=i+1;ME(i).label = 'Jibson  2007 (M)';    ME(i).func = @psda_J07M;         ME(i).mechanism = 'crustal'; ME(i).integrator=1;  ME(i).primaryIM='PGA';           ME(i).isregular=true;  ME(i).ref = 'https://www.sciencedirect.com/science/article/pii/S0013795207000300?via%3Dihub';
-    i=i+1;ME(i).label = 'Jibson  2007 Ia';     ME(i).func = @psda_J07Ia;        ME(i).mechanism = 'crustal'; ME(i).integrator=2;  ME(i).primaryIM='Ia';            ME(i).isregular=true;  ME(i).ref = 'https://www.sciencedirect.com/science/article/pii/S0013795207000300?via%3Dihub';
+    i=i+1;ME(i).label = 'Jibson  2007 Ia';     ME(i).func = @psda_J07Ia;        ME(i).mechanism = 'crustal'; ME(i).integrator=2;  ME(i).primaryIM='AI';            ME(i).isregular=true;  ME(i).ref = 'https://www.sciencedirect.com/science/article/pii/S0013795207000300?via%3Dihub';
     i=i+1;ME(i).label = 'RA 2011 (Rigid)';     ME(i).func = @psda_RA2011R;      ME(i).mechanism = 'crustal'; ME(i).integrator=3;  ME(i).primaryIM='PGV-PGA';       ME(i).isregular=true;  ME(i).ref = 'https://www.sciencedirect.com/science/article/pii/S0013795210002553';
     i=i+1;ME(i).label = 'RA 2011 (Flexible)';  ME(i).func = @psda_RA2011F;      ME(i).mechanism = 'crustal'; ME(i).integrator=4;  ME(i).primaryIM='PGV-PGA';       ME(i).isregular=true;  ME(i).ref = 'https://www.sciencedirect.com/science/article/pii/S0013795210002553';
     i=i+1;ME(i).label = 'RS 2009 (Scalar-M)';  ME(i).func = @psda_RS09M;        ME(i).mechanism = 'crustal'; ME(i).integrator=1;  ME(i).primaryIM='PGA';           ME(i).isregular=true;  ME(i).ref = 'http://www.nzsee.org.nz/db/Bulletin/Archive/42(1)0018.pdf';

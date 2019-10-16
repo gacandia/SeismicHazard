@@ -147,3 +147,6 @@ sig   = Coeff2(6)*ones(size(M));
 tau   = Coeff2(7)*ones(size(M));
 sigma = sqrt(sig.^2+tau.^2);
 
+% convert cm/s2 to g's
+lny    = lny-log(980.66);
+

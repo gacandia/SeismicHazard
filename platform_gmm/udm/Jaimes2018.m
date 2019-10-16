@@ -65,6 +65,11 @@ C       = DATA(index,:);
 Dm      = 0.00750*10.^(0.507*M);
 R       = (rrup.^2+Dm.^2).^0.5;
 lny     = C(1)+ C(2)*M + C(3)*log(R) + C(4)*R;
+
+% convert from cm/s2 to g's
+lny = lny- log(980.66);
+
+
 % sig     = Coeff2(5)*ones(size(M));
 % tau     = Coeff2(6)*ones(size(M));
 % miguel, check this lines, I think the lives above had phi and sig

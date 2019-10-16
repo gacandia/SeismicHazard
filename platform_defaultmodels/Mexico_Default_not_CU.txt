@@ -70,7 +70,7 @@ Polochic2              type area mechanism intraslab  gmpe 3 vertices  16.00  -9
 Polochic3              type area mechanism intraslab  gmpe 3 vertices  16.00  -94.00   -15.00  15.2 -93 -15  15.2 -89.55 -15  16.3 -88 -15
 
 Option 3 - GMPE Library
-at1  handle GarciaJaimes2017 mechanism interface media rock
+at1  handle GarciaJaimes2017 mechanism interface component horizontal
 at2  handle Youngs1997 mechanism intraslab
 at3  handle AtkinsonBoore2003 mechanism intraslab region General
 at4  handle udm method Jaimes2018_protocol #mechanism intraslab media rock

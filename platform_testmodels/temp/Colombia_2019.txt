@@ -25,10 +25,10 @@ Option 2 - Source Geometry #37 of 38 seismic source
 geometry 1 Jaimes&Candia, 2019 
 Colc1ArcodeDabeiba           type area mechanism intraslab  gmpe 1 vertices  7.06500 -76.0270 -5.00000  7.30900 -76.2850 -5.00000  8.02600 -76.5850 -5.00000  8.25600 -76.6140 -5.00000  9.11800 -77.043 -5.000  10.0220 -77.500 -5.000  10.3090 -78.0000 -5.000  10.5670 -78.8670 -5.000  10.5670 -78.9170 -45.00  10.3090 -78.050 -45.00  10.022 -77.550 -45.00  9.1460 -77.109 -45.00  8.2560 -76.664 -45.00  8.0260 -76.635 -45.00  7.3090 -76.335 -45.00  7.0650 -76.077 -45.00
 COLc2BSolano                 type area mechanism intraslab  gmpe 1 vertices  6.47200 -77.5040 -5.00000  5.61300 -77.4010 -5.00000  4.85700 -77.4010 -5.00000  3.39600 -77.4010 -5.00000  2.74300 -77.983 -5.000  2.31400 -78.462 -5.000  2.19100 -78.5550 -5.000  2.17000 -78.5220 -40.00  2.31400 -78.4120 -40.00  2.74300 -77.933 -40.00  3.3960 -77.351 -40.00  4.2460 -77.341 -40.00  4.8570 -77.351 -40.00  5.6130 -77.351 -40.00  6.4720 -77.454 -40.00
-COLsp_1BIntermediaIModifi    type area mechanism intraslab  gmpe 3 vertices  0.5071 -77.9052 -40  0.5071 -75.9988 -120  2.4938 -75.9988 -120  4.489 -74.9973 -120  4.489 -76.9038 -40  2.4938 -77.9052 -40 #
+COLsp_1BIntermediaIModifi    type area mechanism intraslab  gmpe 3 vertices  0.5071 -78.228 -40  0.5071 -76 -120  2.5 -76 -120  4.5 -75 -120  4.5 -76.9 -40  2.5 -78.228 -40 #New
 COLsp_2BIntermediaII         type area mechanism intraslab  gmpe 3 vertices  6.50000 -76.9000 -40.0000  4.50000 -76.9000 -40.0000  4.50000 -75.0000 -120.000  6.50000 -75.0000 -120.000
 COLsp_3BIntermediaIII        type area mechanism intraslab  gmpe 3 vertices  8.00000 -76.9000 -40.0000  6.50000 -76.9000 -40.0000  6.50000 -75.0000 -120.000  8.00000 -75.0000 -120.000
-COLsp_4BProfundaModifi       type area mechanism intraslab  gmpe 3 vertices  0.5071 -75.9988 -120  0.5071 -70.9876 -240  2.4938 -70.9876 -240  4.489 -69.9862 -240  7.9949 -69.9862 -240  7.9949 -74.9973 -120  4.489 -74.9973 -120  2.4938 -75.9988 -120 #
+COLsp_4BProfundaModifi       type area mechanism intraslab  gmpe 3 vertices  0.5071 -76 -120  0.5071 -70.98 -240  2.5 -70.98 -240  4.5 -69.98 -240  8 -69.98 -240  8 -75 -120  4.5 -75 -120  2.5 -76 -120 #New
 COLc3Bocono                  type area mechanism intraslab  gmpe 1 vertices  10.2000 -69.2000 -5.00000  9.25000 -70.3000 -5.00000  7.75000 -72.4500 -5.00000  7.75000 -72.4000 -60.0000  8.17000 -71.774 -60.00  8.78500 -70.906 -60.00  9.25000 -70.2500 -60.00  10.2000 -69.1500 -60.00
 COLc5BStaMartaNorte          type area mechanism intraslab  gmpe 1 vertices  11.2100 -74.2800 -5.00000  10.1200 -73.9400 -5.00000  10.1300 -73.8800 -40.0000  11.2300 -74.2200 -40.0000
 COLc3BStaMartaCentro         type area mechanism intraslab  gmpe 1 vertices  10.1200 -73.9400 -5.00000  9.20000 -73.6500 -5.00000  8.32000 -73.3800 -5.00000  7.99000 -73.2700 -5.00000  7.25500 -73.160 -5.000  7.26300 -73.100 -40.00  8.01000 -73.2200 -40.00  8.35000 -73.3200 -40.00  10.1300 -73.8800 -40.00
@@ -57,9 +57,9 @@ COLc29Salinas                type area mechanism intraslab  gmpe 1 vertices  4.7
 COLc30Suarez                 type area mechanism intraslab  gmpe 1 vertices  6.15000 -73.5000 -5.00000  6.80000 -73.2500 -5.00000  7.25000 -73.1500 -5.00000  7.30000 -73.4100 -48.0000  6.87000 -73.500 -48.00  6.24000 -73.750 -48.00
 COLsi1SubNorteModifi         type area mechanism interface  gmpe 2 vertices  7.52100 -78.4340 -5.00000  6.53000 -78.2580 -5.00000  6.53000 -76.9000 -40.0000  8.00000 -76.9000 -40.0000
 COLsi2SubCentroModifi        type area mechanism interface  gmpe 2 vertices  6.53000 -78.2580 -5.00000  4.50000 -78.2580 -5.00000  4.50000 -76.9000 -40.0000  6.53000 -76.9000 -40.0000
-COLsi3SubSurModifi           type area mechanism intraslab  gmpe 3 vertices  0.5071 -79.4923 -5  0.5071 -77.9052 -40  2.4938 -77.9052 -40  4.489 -76.9038 -40  4.489 -78.5098 -5  2.4938 -79.4923 -5 #
+COLsi3SubSurModifi           type area mechanism intraslab  gmpe 3 vertices  0.5071 -79.586 -5  0.5071 -78.228 -40  2.5 -78.228 -40  4.5 -76.9 -40  4.5 -78.258 -5  2.5 -79.586 -5 #New
 COLc31UribanteCaparro        type area mechanism intraslab  gmpe 1 vertices  7.45000 -72.1000 -5.00000  7.96300 -71.4860 -5.00000  8.50000 -70.8500 -5.00000  8.70000 -71.0300 -27.0000  7.66000 -72.260 -27.00
-COLc22Psi9                   type area mechanism intraslab  gmpe 3 vertices  7.1063 -81.7099 -26  7.1701 -80.5269 -35  7.6389 -78.4416 -50  8.1463 -78.5651 -50  7.673 -80.6522 -35 7.6179 -81.7475 -26 7.5399 -81.7119 -26  7.423 -81.7391 -26  7.3679 -81.6488 -26  7.3203 -81.7379 -26 #  
+COLc22Psi9                   type area mechanism intraslab  gmpe 3 vertices  7.1063 -81.7099 -26  7.1701 -80.5269 -35  7.6389 -78.4416 -50  8.1463 -78.5651 -50  7.673 -80.6522 -35  7.6179 -81.7475 -26 # New 
 
 Option 3 - GMPE Library
 at1  handle Zhao2006 mechanism intraslab                                   #Shallow

@@ -361,5 +361,8 @@ SA    = interp2(r,m,data,rrup,M).*(1+exp(cH*H));
 lny   = log(SA);
 sigma = sig*ones(size(M));
 
+% convert cm/s2 to g's
+lny    = lny-log(980.66);
+
 
 

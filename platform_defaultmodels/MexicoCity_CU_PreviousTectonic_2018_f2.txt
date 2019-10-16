@@ -73,7 +73,7 @@ Option 3 - GMPE Library
 at1  handle Jaimes2006 mechanism interface media rock
 at2  handle Youngs1997 mechanism intraslab
 at3  handle AtkinsonBoore2003 mechanism intraslab region General
-at4  handle Jaimes2015 mechanism intraslab media rock
+at4  handle Jaimes2015 mechanism intraslab station CU
 
 Option 4 - GMPE GROUPS
 Zhao     pointers 1 2 3 4

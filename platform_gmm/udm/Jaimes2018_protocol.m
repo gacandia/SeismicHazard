@@ -20,7 +20,6 @@ function var=Jaimes2018_protocol
 
 var.syntax    = 'Jaimes2018(To,M,rrup)';
 var.vector    = true;
-var.units     = 981;
 var.residuals = 'lognormal';
 var.IM        = struct('control' , 'system' , 'type' , 'double' , 'tag' , 'IM',         'value' , [0.01 0.02 0.06 0.08 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1 2 3 4 5 10]);
 var.M         = struct('control' , 'system' , 'type' , 'double' , 'tag' , 'Magnitude',  'value' , []);

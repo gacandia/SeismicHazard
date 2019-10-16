@@ -17,7 +17,7 @@ if ischar(W)  ,W  =999;end
 if To>=0
     To      = max(To,0.001); %PGA is associated to To=0.01;
 end
-period = [0.01	0.02	0.03	0.05	0.075	0.1	0.15	0.2	0.25	0.3	0.4	0.5	0.75	1	1.5	2	3	4	5	6	7.5	10	0.001	-1];
+period  = [0.01	0.02	0.03	0.05	0.075	0.1	0.15	0.2	0.25	0.3	0.4	0.5	0.75	1	1.5	2	3	4	5	6	7.5	10	0.001	-1];
 T_lo    = max(period(period<=To));
 T_hi    = min(period(period>=To));
 index   = find(abs((period - T_lo)) < 0.0001); % Identify the period

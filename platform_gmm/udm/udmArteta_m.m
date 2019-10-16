@@ -20,7 +20,6 @@ function var=udmArteta_m
 
 var.syntax    = 'udmArteta(To,M,Rhyp,media,region)';
 var.vector    = true;
-var.units     = 1;
 var.residuals = 'lognormal';
 var.IM        = struct('control' , 'system' , 'type' , 'double' , 'tag' , 'IM',         'value' , [0.01 0.02 0.05 0.075 0.1 0.15 0.2 0.25 0.3 0.4 0.5 0.6 0.75 1 1.5 2 2.5 3 4 5 6 7.5 10]);
 var.M         = struct('control' , 'system' , 'type' , 'double' , 'tag' , 'Magnitude',  'value' , []);

@@ -1,4 +1,4 @@
-function [lny,sigma,tau,sig] = condPGV(T,M,Rrup,func,mechanism,un,~,varargin)
+function [lny,sigma,tau,sig] = condPGV(T,M,Rrup,func,mechanism,~,varargin)
 
 % T         = -1; %not used
 % M         = Moment magnitude
@@ -49,36 +49,29 @@ switch mechanism
         sPGV = data(4,:);
 end
 
-% Beware of unit conversions
-% if the GMPE comes in meters (i.e., un=9.81) or cm (i.e., un=981)
-% the logSa value must be corrected by substracting log(un), whereas the
-% standard deviation should be the same.
-% logSa_g      = log(exp(logSa_cm)/un)      = logSa_cm - log(un)
-% logSa_g +s_g = log(exp(logSa_cm+s_cm)/un) = logSa_cm - log(un) +s_cm
-% s_g          = s_cm
 
 if any(bin1)
     [lnSa,sig]  = func(Ts(1),varargin{:});
-    lny(bin1)   = A(1)+B(1)*(lnSa(bin1)-log(un));
+    lny(bin1)   = A(1)+B(1)*lnSa(bin1);
     sigma(bin1) = sqrt(B(1)^2*sig(bin1).^2+sPGV(1)^2);
 end
 if any(bin2)
     [lnSa,sig]  = func(Ts(2),varargin{:});
-    lny(bin2)   = A(2)+B(2)*(lnSa(bin2)-log(un));
+    lny(bin2)   = A(2)+B(2)*lnSa(bin2);
     sigma(bin2) = sqrt(B(2)^2*sig(bin2).^2+sPGV(2)^2);
 end
 if any(bin3)
     [lnSa,sig]  = func(Ts(3),varargin{:});
-    lny(bin3)   = A(3)+B(3)*(lnSa(bin3)-log(un));
+    lny(bin3)   = A(3)+B(3)*lnSa(bin3);
     sigma(bin3) = sqrt(B(3)^2*sig(bin3).^2+sPGV(3)^2);
 end
 if any(bin4)
     [lnSa,sig]  = func(Ts(4),varargin{:});
-    lny(bin4)   = A(4)+B(4)*(lnSa(bin4)-log(un));
+    lny(bin4)   = A(4)+B(4)*lnSa(bin4);
     sigma(bin4) = sqrt(B(4)^2*sig(bin4).^2+sPGV(4)^2);
 end
 if any(bin5)
     [lnSa,sig]  = func(Ts(5),varargin{:});
-    lny(bin5)   = A(5)+B(5)*(lnSa(bin5)-log(un));
+    lny(bin5)   = A(5)+B(5)*lnSa(bin5);
     sigma(bin5) = sqrt(B(5)^2*sig(bin5).^2+sPGV(5)^2);
 end

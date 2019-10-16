@@ -1,4 +1,4 @@
-function [lny,sigma,tau,phi] = Macedo2019(T,M,Rrup,func,mechanism,saunits,Vs30,varargin)
+function [lny,sigma,tau,phi] = Macedo2019(T,M,Rrup,func,mechanism,Vs30,varargin)
 
 % M         = Moment magnitude
 % func      = function handle to Sa model
@@ -71,10 +71,6 @@ end
 
 [lnPGA,sPGA]  = func(0,varargin{:}); % evaluates GMM for PGA
 [lnSa1,sSa1]  = func(1,varargin{:}); % evaluates GMM for Sa(T=1)
-
-% correct for units
-lnPGA  = lnPGA - log(saunits);
-lnSa1  = lnSa1 - log(saunits);
 
 % evaluates conditional GMM
 lny   = c1+c2*log(Vs30)+c3*M+c4*lnPGA+c5*lnSa1;

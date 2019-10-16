@@ -1,11 +1,10 @@
-function [lny,sigma,tau,sig] = condSa(T,M,func,mechanism,un,varargin)
+function [lny,sigma,tau,sig] = condSa(T,M,func,mechanism,varargin)
 
 % T         = 1; %not used
 % M         = Moment magnitude
 % func      = function handle to Sa model
 % mechanism = 1 for interface earthquakes
 %             2 for intraslab earthquakes
-% un        = units of Sa
 % varargin  = input parameters that follow T in the matlab function that
 %              runs the Sa GMPE
 
