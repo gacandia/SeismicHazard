@@ -50,5 +50,5 @@ S35 type circular spacing 30 RA custom 1 4 0 taper false
                           
 Option 7 - Pre defined sites (Vs30 parameter is optional)
 source 'CHI_SIGAS.mat' 'CHI_USGS.mat' 600
-LasCondes1  -33.4124 -70.5635 0.6913
-LasCondes2  -33.5124 -70.5635 0.6913
+LasCondes1  -33.4124 -70.5635 691.3
+LasCondes2  -33.5124 -70.5635 691.3

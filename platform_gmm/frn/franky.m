@@ -9,8 +9,3 @@ ind4     = iptrs+3*Ndepend;
 param    = varargin{ind4};
 [mu,sig,tau,phi] = gmpefun(T,param{:});
 
-
-% unit conversion done indide franky
-gmmunits = varargin{ind2};
-mu       = mu-log(gmmunits);
-

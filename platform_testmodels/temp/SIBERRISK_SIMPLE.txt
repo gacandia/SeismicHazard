@@ -44,5 +44,5 @@ S35 type circular spacing 30 RA custom 1 4 0 taper false
                           
 Option 7 - Pre defined sites
 source 760
-site1 -33.4124 -70.5635 0.6913
-site2 -33.6124 -70.5635 0.6913
+site1 -33.4124 -70.5635 691.3
+site2 -33.6124 -70.5635 691.3

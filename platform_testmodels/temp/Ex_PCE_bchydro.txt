@@ -42,4 +42,4 @@ S12 type circular spacing 30 RA custom 1 4 0 taper false
                           
 Option 7 - Pre defined sites
 source 760
-LasCondes  -33.4124 -70.5635 0.6913
+LasCondes  -33.4124 -70.5635 691.3

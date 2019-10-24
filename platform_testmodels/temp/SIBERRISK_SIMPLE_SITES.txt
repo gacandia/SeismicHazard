@@ -44,4 +44,4 @@ S35 type circular spacing 30 RA custom 1 4 0 taper false
                           
 Option 7 - Pre defined sites
 source 'CHI_SIGAS.mat' 'CHI_USGS.mat' 760
-nodes  Site_list_example.txt
+Site_list_example.txt

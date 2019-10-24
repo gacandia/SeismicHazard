@@ -177,4 +177,4 @@ SRF2 type rectangular spacing 0.1 RA custom 1 4 0 RW custom 0.5 2.15 0 RL custom
                           
 Option 7 - Pre defined sites
 source 760
-LasCondes  -33.4124 -70.5635 0.6913
+LasCondes  -33.4124 -70.5635 691.3

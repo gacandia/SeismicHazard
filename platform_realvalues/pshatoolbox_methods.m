@@ -69,21 +69,21 @@ end
 
 % interperiod correlation models
 if group == 4
-    ME(1:13,1)=struct('label',[],'str',[],'func',[],'ref',[]);
+    ME(1:13,1)=struct('label',[],'str',[],'func',[],'dependency',[],'ref',[]);                  % mechanism - magnitude - direction
     i = 0;
-    i=i+1; ME(i).label = 'none';                     ME(i).func = @none_spectral;               ME(i).ref='www.google.com';
-    i=i+1; ME(i).label = 'Baker & Cornell 2006';     ME(i).func = @BC_spectral_2006;            ME(i).ref='https://doi.org/10.1785/0120050060';
-    i=i+1; ME(i).label = 'Baker & Jayaram 2008';     ME(i).func = @BJ_spectral_2008;            ME(i).ref='https://doi.org/10.1193/1.2857544';
-    i=i+1; ME(i).label = 'Jayaram et al. 2011';      ME(i).func = @JB_spectral_2011;            ME(i).ref='https://doi.org/10.12989/eas.2011.2.4.357';
-    i=i+1; ME(i).label = 'Cimellaro 2013';           ME(i).func = @Cimellaro_2013;              ME(i).ref='https://doi.org/10.1002/eqe.2248';
-    i=i+1; ME(i).label = 'ASK2014 - NGA West2';      ME(i).func = @ASK14_spectral_2014;         ME(i).ref='https://doi.org/10.1193/070913eqs198m';
-    i=i+1; ME(i).label = 'Abrahamanson et al. 2016'; ME(i).func = @BCHhydro_spectral_2016;      ME(i).ref='https://doi.org/10.1193/051712EQS188MR';
-    i=i+1; ME(i).label = 'Baker & Bradley 2017';     ME(i).func = @BakerBradley_spectral_2017;  ME(i).ref='https://doi.org/10.1193/060716EQS095M';
-    i=i+1; ME(i).label = 'Jaimes & Candia 2019';     ME(i).func = @JC_spectral_2018;            ME(i).ref='www.google.com';
-    i=i+1; ME(i).label = 'Candia et al. 2019';       ME(i).func = @SR_spectral_2019;            ME(i).ref='www.google.com';
-    i=i+1; ME(i).label = 'Goda & Atkinson 2009';     ME(i).func = @GodaAtkinson_spectral_2009;  ME(i).ref='https://doi.org/10.1785/0120090007';
-    i=i+1; ME(i).label = 'Akkar & Sandikkaya 2014';  ME(i).func = @Akkar_spectral_2014;         ME(i).ref='https://doi.org/10.1007/s10518-013-9537-1';
-    i=i+1; ME(i).label = 'Ji et al. 2017';           ME(i).func = @Ji_spectral_2017;            ME(i).ref='https://doi.org/10.1785/0120160291';
+    i=i+1; ME(i).label = 'none';                     ME(i).func = @none_spectral;               ME(i).dependency = [0 0 0];    ME(i).ref='www.google.com';
+    i=i+1; ME(i).label = 'Baker & Cornell 2006';     ME(i).func = @BC_spectral_2006;            ME(i).dependency = [0 0 1];    ME(i).ref='https://doi.org/10.1785/0120050060';
+    i=i+1; ME(i).label = 'Baker & Jayaram 2008';     ME(i).func = @BJ_spectral_2008;            ME(i).dependency = [0 0 0];    ME(i).ref='https://doi.org/10.1193/1.2857544';
+    i=i+1; ME(i).label = 'Jayaram et al. 2011';      ME(i).func = @JB_spectral_2011;            ME(i).dependency = [1 0 0];    ME(i).ref='https://doi.org/10.12989/eas.2011.2.4.357';
+    i=i+1; ME(i).label = 'Cimellaro 2013';           ME(i).func = @Cimellaro_2013;              ME(i).dependency = [0 0 1];    ME(i).ref='https://doi.org/10.1002/eqe.2248';
+    i=i+1; ME(i).label = 'ASK2014 - NGA West2';      ME(i).func = @ASK14_spectral_2014;         ME(i).dependency = [0 0 0];    ME(i).ref='https://doi.org/10.1193/070913eqs198m';
+    i=i+1; ME(i).label = 'Abrahamanson et al. 2016'; ME(i).func = @BCHhydro_spectral_2016;      ME(i).dependency = [0 0 0];    ME(i).ref='https://doi.org/10.1193/051712EQS188MR';
+    i=i+1; ME(i).label = 'Baker & Bradley 2017';     ME(i).func = @BakerBradley_spectral_2017;  ME(i).dependency = [0 0 0];    ME(i).ref='https://doi.org/10.1193/060716EQS095M';
+    i=i+1; ME(i).label = 'Jaimes & Candia 2019';     ME(i).func = @JC_spectral_2018;            ME(i).dependency = [0 0 0];    ME(i).ref='www.google.com';
+    i=i+1; ME(i).label = 'Candia et al. 2019';       ME(i).func = @SR_spectral_2019;            ME(i).dependency = [1 0 0];    ME(i).ref='www.google.com';
+    i=i+1; ME(i).label = 'Goda & Atkinson 2009';     ME(i).func = @GodaAtkinson_spectral_2009;  ME(i).dependency = [0 0 0];    ME(i).ref='https://doi.org/10.1785/0120090007';
+    i=i+1; ME(i).label = 'Akkar & Sandikkaya 2014';  ME(i).func = @Akkar_spectral_2014;         ME(i).dependency = [0 0 0];    ME(i).ref='https://doi.org/10.1007/s10518-013-9537-1';
+    i=i+1; ME(i).label = 'Ji et al. 2017';           ME(i).func = @Ji_spectral_2017;            ME(i).dependency = [0 1 0];    ME(i).ref='https://doi.org/10.1785/0120160291';
 end
 
 % psda
@@ -110,7 +110,6 @@ if group == 5
     i=i+1;ME(i).label = 'RS 2009 (Scalar-M)';  ME(i).func = @psda_RS09M;        ME(i).mechanism = 'crustal'; ME(i).integrator=1;  ME(i).primaryIM='PGA';           ME(i).isregular=true;  ME(i).ref = 'http://www.nzsee.org.nz/db/Bulletin/Archive/42(1)0018.pdf';
     i=i+1;ME(i).label = 'RS 2009 (Vector)';    ME(i).func = @psda_RS09V;        ME(i).mechanism = 'crustal'; ME(i).integrator=4;  ME(i).primaryIM='PGV-PGA';       ME(i).isregular=true;  ME(i).ref = 'http://www.nzsee.org.nz/db/Bulletin/Archive/42(1)0018.pdf';    
     i=i+1;ME(i).label = 'AM 1988';             ME(i).func = @psda_AM1988;       ME(i).mechanism = 'crustal'; ME(i).integrator=2;  ME(i).primaryIM='PGA';           ME(i).isregular=true;  ME(i).ref = 'https://doi.org/10.1002/eqe.4290160704';
-    
     
     for j=1:length(ME)
         ME(j).Safactor=str2IM(regexp(ME(j).primaryIM,'\-','split'));

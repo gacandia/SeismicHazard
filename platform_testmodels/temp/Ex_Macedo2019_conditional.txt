@@ -57,6 +57,6 @@ zone5 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
 zone6 type circular spacing 90 nref 1 RA custom 1 4 0 taper false 
 zone7 type circular spacing 90 nref 1 RA custom 1 4 0 taper false 
 
-Option 7 - Pre defined sites       }
+Option 7 - Pre defined sites
 Source 760
-LasCondes  -33.4124 -70.5635 0.6913
+LasCondes  -33.4124 -70.5635 691.3
