@@ -8,7 +8,8 @@ function ME = pshatoolbox_methods(group,varargin)
 % ground motion models (gmpe)
 if group ==1
     i = 0;
-    ME(1:28,1)=struct('label',[],'str',[],'func',[],'type',[],'ref',[]);
+    ME(1:36,1)=struct('label',[],'str',[],'func',[],'type',[],'ref',[]);
+    % regular GMMs
     i=i+1; ME(i).label = 'Youngs et al. 1997';           ME(i).func = @Youngs1997;                 ME(i).type='regular';  ME(i).ref='https://doi.org/10.1785/gssrl.68.1.58';
     i=i+1; ME(i).label = 'Atkinson & Boore, 2003';       ME(i).func = @AtkinsonBoore2003;          ME(i).type='regular';  ME(i).ref='https://doi.org/10.1785/0120020156';
     i=i+1; ME(i).label = 'Zhao et al. 2006';             ME(i).func = @Zhao2006;                   ME(i).type='regular';  ME(i).ref='https://doi.org/10.1785/0120050122';
@@ -38,6 +39,11 @@ if group ==1
     i=i+1; ME(i).label = 'CB 2014 - NGAW2';              ME(i).func = @CB_2014_nga;                ME(i).type='regular';  ME(i).ref='https://doi.org/10.1193/062913eqs175m';
     i=i+1; ME(i).label = 'BSSA 2014 - NGAW2';            ME(i).func = @BSSA_2014_nga;              ME(i).type='regular';  ME(i).ref='https://doi.org/10.1193/070113eqs184m';
     i=i+1; ME(i).label = 'ASK 2014 - NGAW2';             ME(i).func = @ASK_2014_nga;               ME(i).type='regular';  ME(i).ref='https://doi.org/10.1193/070913eqs198m';
+  
+    % CAV and Arias Intensity
+    i=i+1; ME(i).label = 'Du & Wang, 2012';              ME(i).func = @DW12;                       ME(i).type='regular';  ME(i).ref='https://doi.org/10.1002/eqe.2266';
+    
+    % special GMMs
     i=i+1; ME(i).label = 'Conditional Sa';               ME(i).func = @condSa;                     ME(i).type='cond';     ME(i).ref='www.google.com';
     i=i+1; ME(i).label = 'Conditional PGV (CM2019)';     ME(i).func = @condPGV;                    ME(i).type='cond';     ME(i).ref='www.google.com';
     i=i+1; ME(i).label = 'Conditional Ia (Macedo2019)';  ME(i).func = @Macedo2019;                 ME(i).type='cond';     ME(i).ref='www.google.com';
@@ -69,7 +75,7 @@ end
 
 % interperiod correlation models
 if group == 4
-    ME(1:13,1)=struct('label',[],'str',[],'func',[],'dependency',[],'ref',[]);                  % mechanism - magnitude - direction
+    ME(1:13,1)=struct('label',[],'str',[],'func',[],'dependency',[],'ref',[]);                      % mechanism - magnitude - direction
     i = 0;
     i=i+1; ME(i).label = 'none';                     ME(i).func = @none_spectral;               ME(i).dependency = [0 0 0];    ME(i).ref='www.google.com';
     i=i+1; ME(i).label = 'Baker & Cornell 2006';     ME(i).func = @BC_spectral_2006;            ME(i).dependency = [0 0 1];    ME(i).ref='https://doi.org/10.1785/0120050060';
@@ -88,7 +94,7 @@ end
 
 % psda
 if group == 5
-    ME(1:11,1)=struct('label',[],'str',[],'isregular',[],'func',[],'integrator',[],'primaryIM',[],'Safactor',[],'ref',[]);
+    ME(1:14,1)=struct('label',[],'str',[],'isregular',[],'func',[],'integrator',[],'primaryIM',[],'Safactor',[],'ref',[]);
     i=0;
     % subduction
     i=i+1;ME(i).label = 'BMT 2017 Sa(M)';      ME(i).func = @psda_BMT2017M;     ME(i).mechanism = 'subduction'; ME(i).integrator=1;  ME(i).primaryIM='Sa(1.5Ts)';     ME(i).isregular=true;  ME(i).ref = 'https://doi.org/10.1061/(ASCE)GT.1943-5606.0001833';
@@ -117,6 +123,17 @@ if group == 5
     end
     
 end
+
+% settlement and tilt models
+if group == 6
+    ME(1:4,1)=struct('label',[],'func',[],'str',[],'IM',[],'ref',[]);
+    i=0;
+    i=i+1;ME(i).label = 'Bullock 2018 (Settlement)';            ME(i).func = @B18_S;   ME(i).IM='CAV';      ME(i).ref = 'https://doi.org/10.1680/jgeot.17.P.174';
+    i=i+1;ME(i).label = 'Ishihara 2017 (Settlement)';           ME(i).func = @B18_S;   ME(i).IM='CAV';      ME(i).ref = 'https://doi.org/10.1016/j.soildyn.2017.08.026';
+    i=i+1;ME(i).label = 'Bullock, 2018 (Tilt Empirical)';       ME(i).func = @B18_TE;  ME(i).IM='CAV';      ME(i).ref = 'https://doi.org/10.1680/jgeot.17.P.174';
+    i=i+1;ME(i).label = 'Bullock, 2018 (Tilt Semi Empirical)';  ME(i).func = @B18_TSE; ME(i).IM='CAV-VGI';  ME(i).ref = 'https://doi.org/10.1680/jgeot.17.P.174';
+end
+
 
 for i=1:length(ME)
     ME(i).str=func2str(ME(i).func);
