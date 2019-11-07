@@ -21,7 +21,7 @@ switch Environment
             case 'reverse', FR = 1;%reverse
         end
         
-    case 2 % Subduction
+    case 'subduction'
         switch mechanism
             case 'interface'
                 a0 =-3.674;

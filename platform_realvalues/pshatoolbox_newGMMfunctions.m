@@ -2,6 +2,7 @@ clear all
 clc
 
 %% Functions required to include new GMMs
+edit pshatoolbox_methods.m
 edit mGMPE_info.m
 edit mGMPEassembleArea.m
 edit mGMPEassembleCrustal.m
