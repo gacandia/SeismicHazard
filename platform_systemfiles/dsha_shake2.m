@@ -2,22 +2,18 @@ function[shakefield]=dsha_shake2(model,scenario,opt)
 
 
 %% builds list of unique mechanism-magnitude scenarios for optimum L computation
-method     = pshatoolbox_methods(4);
-fun1       = func2str(opt.Spectral);
-[~,B]      = intersect({method.str},fun1);
-dependency = [method(B).dependency(1),1];
-
 allmechs = {'interface','intraslab','grid','crustal','shallowcrustal'};
-disc = zeros(size(scenario,1),2);
+disc = zeros(size(scenario,1),5);
 for i=1:size(scenario,1)
-    mec_i   = model(scenario(i,1)).source(scenario(i,2)).mechanism;
-    [~,mec] = intersect(allmechs,mec_i);
-    mag = scenario(i,3);
-    disc(i,:)=[mec,mag];
+    mdl       = scenario(i,1);
+    src       = scenario(i,2);
+    mec       = model(mdl).source(src).mechanism; [~,mec] = intersect(allmechs,mec);
+    gmm       = model(mdl).source(src).gptr;
+    mag       = scenario(i,3);
+    disc(i,:) = [mdl,src,mec,mag,gmm];
 end
-
-unk = unique(disc*diag(dependency), 'rows');
-[~,unkScen] = ismember(disc*diag(dependency),unk,'rows');
+unk         = unique(disc, 'rows');
+[~,unkScen] = ismember(disc,unk,'rows');
 
 %% initializes shakefield structure
 modelsource = unique(scenario(:,1:2),'rows');

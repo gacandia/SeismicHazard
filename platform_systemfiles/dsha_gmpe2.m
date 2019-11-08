@@ -8,13 +8,22 @@ NIM         = length(IMs);
 Nsites      = size(r0,1);
 Nscen       = size(shakefield.mscl.M,1);
 mulogIM     = zeros(Nsites,NIM,Nscen);
-[tau,phi]   = deal(zeros(NIM,Nscen));
+[sig,tau,phi]   = deal(zeros(NIM,Nscen));
 
 for i=1:Nsites
     for j=1:NIM
-        [mulogIM(i,j,:),~,tau(j,:),phi(j,:)]=run_gmpe(shakefield,r0(i,:),IMs(j),Vs30(i),ellipsoid);
+        [mulogIM(i,j,:),sig(j,:),tau(j,:),phi(j,:)]=run_gmpe(shakefield,r0(i,:),IMs(j),Vs30(i),ellipsoid);
     end
 end
+
+% This is an assumption to cope with old GMMs that do not provide a tau and
+% phi
+if max(tau(:))==0 || max(phi(:))==0
+    a=2/3;
+    tau = a*sig/sqrt(1+a^2);
+    phi =   sig/sqrt(1+a^2);
+end
+
 
 shakefield.mulogIM  = mulogIM;
 shakefield.tau      = tau;

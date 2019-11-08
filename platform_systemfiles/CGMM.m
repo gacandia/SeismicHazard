@@ -93,16 +93,18 @@ end
 
 % -------  running section -----------------------------------------------
 rng(RandType);
-tic
+t=cputime;
 handles.PCE = runPCE(source,r0,IM,im,Nreal,ellip); 
+time1       = cputime-t;
 handles.PCE = permute(handles.PCE,[1 3 2]); 
-time1       = toc;
+
 
 rng(RandType);
-tic
+t = cputime;
 handles.MCS = runMCS(source,r0,IM,im,Nreal,ellip); 
+time2       = cputime-t;
 handles.MCS = permute(handles.MCS,[1 3 2]); 
-time2       = toc;
+
 
 % -------  running section -----------------------------------------------
 delete(findall(handles.ax2,'type','line'));

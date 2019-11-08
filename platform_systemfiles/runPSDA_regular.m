@@ -56,7 +56,8 @@ for site_ptr=1:Nsites
             switch mechanism
                 case 'interface'      , fun = fun1; Bs=B(1);
                 case 'intraslab'      , fun = fun2; Bs=B(2);
-                case 'crustal'        , fun = fun3; Bs=B(3);
+                case 'crustal'        , fun = fun3;
+                    Bs=B(3);
                 case 'shallowcrustal' , fun = fun3; Bs=B(3); % this (3) is not an error
                 case 'grid'           , fun = fun4; Bs=B(4);
             end

@@ -97,6 +97,7 @@ if ~isnan(ptrs(12,1))
         SMLIB(i).integrator = ME(C).integrator;
         SMLIB(i).primaryIM  = ME(C).primaryIM;
         SMLIB(i).Safactor   = ME(C).Safactor;
+        SMLIB(i).param      = [];
         if length(stri)>2
             fixparam = struct(stri{2:end});
             flds     = fields(fixparam);

@@ -5,16 +5,16 @@ w   = handles.sys.WEIGHT(:,4);
 % Hazard Curves
 if ~isempty(haz.lambda)
     for i=1:length(w)
-        haz.lambda(:,:,:,:,i)=haz.lambda(:,:,:,:,i).^w(i);
+        haz.lambda(:,:,:,:,i)=haz.lambda(:,:,:,:,i)*w(i);
     end
-    haz.lambda = nanprod(haz.lambda,5);
+    haz.lambda = nansum(haz.lambda,5);
 end
 
 
 % Hazard deaggregation
-if ~isempty(haz.deagg)
+SIZ    = size(haz.deagg);
+if ~isempty(haz.deagg) && length(SIZ)>=5
     deagg  = haz.deagg(:,:,:,:,1);
-    SIZ    = size(haz.deagg);
     for i=1:SIZ(1)
         for j=1:SIZ(2)
             for k=1:SIZ(3)
@@ -22,9 +22,13 @@ if ~isempty(haz.deagg)
                     for m=1:SIZ(5)
                         if ~isempty(haz.deagg{i,j,k,l,m})
                             if m==1
-                                deagg{i,j,k,l}(:,3)=deagg{i,j,k,l}(:,3).^w(m);
+                                aux = deagg{i,j,k,l}(:,3)*w(m);
+                                aux(isnan(aux))=0;
+                                deagg{i,j,k,l}(:,3)=aux;
                             else
-                                deagg{i,j,k,l}(:,3)=deagg{i,j,k,l}(:,3).*(haz.deagg{i,j,k,l,m}(:,3).^w(m));
+                                aux = haz.deagg{i,j,k,l,m}(:,3)*w(m);
+                                aux(isnan(aux))=0;
+                                deagg{i,j,k,l}(:,3)=deagg{i,j,k,l}(:,3)+aux;
                             end
                         end
                     end
@@ -36,14 +40,13 @@ if ~isempty(haz.deagg)
 end
 
 % Mean Rate Density
-% No se realmente si este promedio hace sentido,  :(
 if ~isempty(haz.MRD)
-    haz.MRD(isnan(haz.MRD))=1;
+    haz.MRD(isnan(haz.MRD))=0;
     for i=1:length(w)
         if i==1
-            MRD = haz.MRD(:,:,:,:,1).^w(i);
+            MRD = haz.MRD(:,:,:,:,1)*w(i);
         else
-            MRD = MRD.*(haz.MRD(:,:,:,:,i).^w(i));
+            MRD = MRD+(haz.MRD(:,:,:,:,i)*w(i));
         end
     end
     haz.MRD=MRD;

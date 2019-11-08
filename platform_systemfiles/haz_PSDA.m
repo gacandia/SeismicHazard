@@ -54,7 +54,7 @@ if any(ismember(imethod,[3 4])) % Ellen´s rigid and flexible slopes
     Ncorr    = length(corrlist);
     haz.MRD  = zeros(Nsites,Nim,Nim,Nsource,Nbranch,Ncorr);
     for ii=1:Ncorr
-        [haz.MRD(:,:,:,:,:,ii)]=runlogictree2V(handles,corrlist(1),sourcelist);
+        [haz.MRD(:,:,:,:,:,ii)]=runlogictree2V(handles,corrlist(ii),sourcelist);
     end
 end
 

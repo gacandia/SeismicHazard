@@ -15,12 +15,14 @@ Ngroup = length(handles.shakefield);
 fprintf(spat,'   Shakefield Assembler',toc(t0));
 
 for i=1:Ngroup
+    
     handles.shakefield(i)   = dsha_gmpe2(handles.shakefield(i),r0,Vs30,opt);
 end
+
 fprintf(spat,'   Ground Motion Model',toc(t0));
 
 handles.hdist = computeh(r0);  % move from here
-handles.L  = dsha_chol2(handles.shakefield,handles.hdist,handles.opt);
+handles.L     = dsha_chol2(handles.shakefield,handles.hdist,handles.opt);
 fprintf(spat,'   Correlation Structure',toc(t0));
 
 fprintf('---------------------------------------------------------------------------------------------------------\n');

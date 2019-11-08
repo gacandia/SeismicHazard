@@ -4,7 +4,7 @@ IMptr      = handles.pop_field.Value;
 siteptr    = handles.site_menu_psda.Value;
 Nsim       = str2double(handles.NumSim.String);
 opt        = handles.opt;
-im         = handles.opt.im;
+im         = handles.opt.im(:,1);
 Nim        = size(im,1);
 IMs        = [opt.IM1;opt.IM2];
 Nsites     = size(handles.h.p,1);
@@ -16,7 +16,6 @@ Nscen      = size(handles.scenarios,1);
 Y_IS       = zeros(Nscen,Nsim);
 
 Nz        = size(handles.L,1);
-Nsim      = str2double(handles.NumSim.String);
 cont      = 1;
 for i=1:length(handles.shakefield)
     NM = length(handles.shakefield(i).mscl.M);

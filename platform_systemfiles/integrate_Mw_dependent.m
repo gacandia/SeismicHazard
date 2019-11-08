@@ -4,7 +4,7 @@ switch optimizeD
     case 'on' %modo macedo (fast, very accurate)
         lambda = zeros(size(deagg));
         for i=1:length(deagg)
-            lambda(i)=sum(deagg{i}(:,3));
+            lambda(i)=nansum(deagg{i}(:,3));
         end
         applyCorr = false;
         [Sa,Mag,deriv,Deag]=PSHA2PSDA(deagg,Sa,lambda,applyCorr);

@@ -49,11 +49,12 @@ for j=1:NIM
             a   = -smuk^2/(2*sk^2) - 1/2;
             b   = (lnz - muk) * smuk/(sk^2);
             c   = - (lnz - muk).^2/(2*sk^2);
+            ee  = exp(c - b^2/(4*a));
             Cz(k, i, 1) = 1/1  * NMmin * (1-normcdf((lnz - muk)/stot));
-            Cz(k, i, 2) = 1/1  * NMmin * smuk/(2*sk*sqpi)* exp(c - b^2/(4*a)) * 1/((-a)^0.5);
-            Cz(k, i, 3) = 1/2  * NMmin * smuk/(2*sk*sqpi)* exp(c - b^2/(4*a)) * b/(2*(-a)^1.5);
-            Cz(k, i, 4) = 1/6  * NMmin * smuk/(2*sk*sqpi)* exp(c - b^2/(4*a)) * ((-2*a*(1 + 2*a) + b^2)/(4*(-a)^2.5));
-            Cz(k, i, 5) = 1/24 * NMmin * smuk/(2*sk*sqpi)* exp(c - b^2/(4*a)) * (-b*(6*a*(1 + 2*a)-b^2)/(8*(-a)^3.5));
+            Cz(k, i, 2) = 1/1  * NMmin * smuk/(2*sk*sqpi)* ee * 1/((-a)^0.5);
+            Cz(k, i, 3) = 1/2  * NMmin * smuk/(2*sk*sqpi)* ee * b/(2*(-a)^1.5);
+            Cz(k, i, 4) = 1/6  * NMmin * smuk/(2*sk*sqpi)* ee * ((-2*a*(1 + 2*a) + b^2)/(4*(-a)^2.5));
+            Cz(k, i, 5) = 1/24 * NMmin * smuk/(2*sk*sqpi)* ee * (-b*(6*a*(1 + 2*a)-b^2)/(8*(-a)^3.5));
         end
     end
     Cz         = permute(nansum(bsxfun(@times,rate,Cz),1),[2 3 1]);
