@@ -7,7 +7,7 @@ if nargin==3
     if contains(filename,'.mat')
         load([pathname,filename],'sys','opt','h')
     elseif contains(filename,'.txt')
-        [sys,opt,h]=loadPSHA([pathname,filename]);
+        [sys,opt,h]=loadPSHA(fullfile(pathname,filename));
     end
 elseif nargin==5
     sys    = varargin{1};
@@ -241,5 +241,26 @@ if isempty(handles.model) && ~isempty(handles.modelcdm)
     handles.tableCDM.Enable = 'on';
     handles.runCDM.Enable   = 'on';
     handles.CDM_DisplayOptions.Enable='on';
+end
+
+%% validation data
+ind1 =sys.PTRS(15,1);
+ind2 =sys.PTRS(15,2);
+if ~isnan(ind1)
+    line          = regexp(sys.DATA{ind1},'\ ','split');
+    handles.sys.D = str2double(line(1,2:end));
+    ND            = length(handles.sys.D);
+    line          = sys.DATA(ind1+1:ind2,:);
+    Nrows         = size(line,1);
+    handles.sys.Dlabels     = cell(Nrows,1);
+    handles.sys.lambdaDTest = zeros(Nrows,ND);
+    
+    for i=1:size(line,1)
+        line_i = regexp(line{i},'\ ','split');
+        lab_i  = strjoin(line_i(1:end-ND),' ');
+        line_i = line_i(end-ND+1:end);
+        handles.sys.Dlabel{i}=lab_i;
+        handles.sys.lambdaDTest(i,:)=str2double(line_i);
+    end
 end
 

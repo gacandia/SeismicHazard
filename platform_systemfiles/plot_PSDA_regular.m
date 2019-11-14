@@ -78,7 +78,6 @@ if haz.L0
     end
 end
 
-
 if haz.R0
     branch_ptr = haz.R1;
     lambdaD    = handles.lambdaD(site_ptr,:,:,branch_ptr);
@@ -97,7 +96,7 @@ if haz.R0
             if flatcolor
                 plot(handles.ax1,d,lam1(jj,:),'color',gris,'DisplayName',str{jj})
             else
-                plot(handles.ax1,d,lam1','DisplayName',str{jj})
+                plot(handles.ax1,d,lam1(jj,:),'DisplayName',str{jj})
             end
         end
         
@@ -145,8 +144,6 @@ if haz.R0
     end
 end
 
-
-
 axis(handles.ax1,'auto')
 cF   = get(0,'format');
 format long g
@@ -161,4 +158,14 @@ uimenu(c,'Label','Undock','Callback',           {@figure2clipboard_uimenu,handle
 uimenu(c,'Label','Undock & compare','Callback', {@figurecompare_uimenu,handles.ax1});
 set(handles.ax1,'uicontextmenu',c);
 format(cF);
+
+if isfield(handles.sys,'D') && isfield(handles.sys,'lambdaDTest')
+   Nrows = size(handles.sys.lambdaDTest,1);
+   handles.ax1.ColorOrderIndex=1;
+   for i=1:Nrows
+       lab_i = handles.sys.Dlabel{i};
+       plot(handles.ax1,handles.sys.D,handles.sys.lambdaDTest(i,:),'o','DisplayName',lab_i);
+   end
+end
+
 

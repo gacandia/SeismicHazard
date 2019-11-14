@@ -17,7 +17,7 @@ end
 
 function PSDA2_OpeningFcn(hObject, eventdata, handles, varargin) %#ok<*INUSL>
 
-load psdabuttons c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12
+load psdabuttons c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13
 handles.CDataOpen                 = c1; 
 handles.CDataClosed               = c2; 
 handles.toggle1.CData             = c3; 
@@ -30,6 +30,7 @@ handles.undock.CData              = c9;
 handles.runCDM.CData              = c10;
 handles.CDM_DisplayOptions.CData  = c11;
 handles.ColorSecondaryLines.CData = c12;
+handles.ref1.CData                = c13;
 xlabel(handles.ax1,'d (cm)','fontsize',10)
 ylabel(handles.ax1,'Mean Rate of Exceedance','fontsize',10)
 
@@ -50,7 +51,15 @@ varargout{1} = [];
 % ----------------  FILE MENU ---------------------------------------------
 function File_Callback(hObject, eventdata, handles) %#ok<*INUSD,*DEFNU>
 
-function ImportSeismicHazard_Callback(hObject, eventdata, handles)
+function Load_Callback(hObject, eventdata, handles)
+
+function OpenDrivingFile_Callback(hObject, eventdata, handles)
+
+if ispc && isfield(handles,'sys')
+    winopen(handles.sys.filename)
+end
+
+function ImportFromTextFile_Callback(hObject, eventdata, handles)
 
 if isfield(handles,'defaultpath_others')
     [filename,pathname,FILTERINDEX]=uigetfile(fullfile(handles.defaultpath_others,'*.txt'),'select file');
@@ -71,6 +80,40 @@ else
     handles.runMRDeagg.Enable='off';
 end
 handles.FIGpsda.Name = sprintf('%s - Probabilistic Slope Displacement Analysis - PSDA',filename);
+guidata(hObject,handles)
+
+function ValidationModels_Callback(hObject, eventdata, handles)
+
+W = what('platform_testmodels');
+D = dir(W.path);
+D = D(contains({D.name},'.txt'));
+anw = listdlg('PromptString','Test Models:',...
+    'SelectionMode','single','ListString',{D.name});
+if isempty(anw)
+    return
+end
+pathname = D(anw).folder;
+filename = D(anw).name;
+handles.defaultpath_others=pathname;
+handles = wipePSDAModel(handles);
+handles = mat2psda(handles,pathname,filename);
+handles.dlist = SuitedForDeagg(handles);
+
+if ~isempty(handles.dlist)
+    handles.runMRDeagg.Enable='on';
+else
+    handles.runMRDeagg.Enable='off';
+end
+handles.FIGpsda.Name = sprintf('%s - Probabilistic Slope Displacement Analysis - PSDA',filename);
+
+if ispc
+    pdffile = fullfile(W.path,strrep(D(anw).name,'.txt','.pdf'));
+   if exist(pdffile,'file')
+       handles.pdffile = pdffile;
+       handles.ref1.Visible='on';
+   end
+end
+
 guidata(hObject,handles)
 
 function Exit_Callback(hObject, eventdata, handles)
@@ -207,7 +250,6 @@ if isfield(handles,'paramPSDA')
 end
 
 function ClearModel_Callback(hObject, eventdata, handles)
-
 handles=wipePSDAModel(handles);
 guidata(hObject,handles)
 
@@ -225,6 +267,7 @@ handles.tableCDM.Data     = cell(0,7);
 delete(findall(handles.ax1,'type','line'))
 handles.kdesign.Enable    = 'off';
 handles.runMRDeagg.Enable = 'off';
+handles.ref1.Visible      = 'off';
 
 function Tools_Callback(hObject, eventdata, handles)
 
@@ -271,12 +314,6 @@ switch hObject.String
         handles.runCDM.Enable   = 'on';
         handles.CDM_DisplayOptions.Enable='on';
         plot_PSDA_cdm(handles)
-end
-
-function OpenDrivingFile_Callback(hObject, eventdata, handles)
-
-if ispc
-    winopen(handles.sys.filename)
 end
 
 function Examples_Callback(hObject, eventdata, handles)
@@ -441,7 +478,7 @@ handles.ax1.ColorOrderIndex = 1;
 
 % loads and plots results from independent calculations
 % -------------------------------------------------------------------------
-load Problem1 x yPCE Sa_vector Hazard_MC_samples xi_hazard xi_samples PC_Coefficients_Sum_Hazards
+load Problem1_updated x yPCE Sa_vector Hazard_MC_samples xi_hazard xi_samples PC_Coefficients_Sum_Hazards
 plot(handles.ax1,x,yPCE)
 
 % -------------------------------------------------------------------------
@@ -449,12 +486,17 @@ plot(handles.ax1,x,yPCE)
 % -------------------------------------------------------------------------
 d                   = logsp(1,100,10);
 psda_param.d        = logsp(1,100,10);
-psda_param.realSa   = 1000;
-psda_param.realD    = 1000;
+psda_param.realSa   = 200;%1000;
+psda_param.realD    = 200;%1000;
 psda_param.method   = 'PC';
 psda_param.imhazard = 'average';
 xrnd                = xi_samples;
 zrnd                = xi_hazard;
+%%added by JM
+tol                 = 1e-2;
+xrnd                = norminv(linspace(tol,1-tol,100)  ,0,1); 
+zrnd                = norminv(linspace(tol,1-tol,100) ,0,1); 
+%%
 Ts_param            = [1.0 0.3 100];
 ky_param            = [0.1 0.3 100];
 im                  = Sa_vector(:);
@@ -548,8 +590,11 @@ function undock_Callback(hObject, eventdata, handles)
 
 figure2clipboard_uimenu(hObject, eventdata,handles.ax1)
 
-
 function ColorSecondaryLines_Callback(hObject, eventdata, handles)
 
 if handles.mode1.Value, plot_PSDA_regular(handles);end
 if handles.mode2.Value, plot_PSDA_cdm(handles);end
+
+function ref1_Callback(hObject, eventdata, handles)
+
+winopen(handles.pdffile)

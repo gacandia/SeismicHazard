@@ -17,7 +17,7 @@ function [rho] = JC_spectral_2018(T1, T2,~)
 %   rho         = The predicted correlation coefficient
 
 T1(and(T1>=0,T1<0.01))=0.01;
-T1(and(T1>=0,T1<0.01))=0.01;
+T2(and(T2>=0,T2<0.01))=0.01;
 
 T_min = min(T1, T2); 
 T_max = max(T1, T2); 

@@ -12,7 +12,7 @@ function [rho] = Ji_spectral_2017(T1, T2,param)
 % Based Earthquake Risk and Resilience of Interdependent Systems and NetworKs
 
 T1(and(T1>=0,T1<0.01))=0.01;
-T1(and(T1>=0,T1<0.01))=0.01;
+T2(and(T2>=0,T2<0.01))=0.01;
 
 T = [0.01;0.02;0.05;0.07;0.1; 0.2 ;0.3 ;0.5 ;0.7 ;1.0 ;1.5 ;1.7 ;2.0 ];
 M = param.M;

@@ -1,4 +1,4 @@
-%% psha
+%% psha buttons
 c1  = double(imread('form1.jpg'))/255;
 c2  = double(imread('form2.jpg'))/255;
 c3  = double(imread('engine.jpg'))/255;
@@ -27,8 +27,7 @@ handles.RefreshButton.CData        = c10;
 handles.OpenRef.CData              = c11;
 handles.ColorSecondaryLines.CData  = c12;
 
-
-%% scenarios
+%% scenarios buttons 
 Undockbutton = double(imread('Undock.jpg'))/255;
 sumbuttonbutton = double(imread('Sum.jpg'))/255;
 ExitButtonbutton = double(imread('exit.jpg'))/255;
@@ -44,7 +43,7 @@ Rulerbutton = double(imread('Scale.jpg'))/255;
 invokeWizbutton = double(imresize(imread('MagicWand.jpg'),[20 20]))/255;
 save All_Scenario_Buttons
 
-%% psda
+%% psda buttons
 
 c1  = double(imread('Open_Lock.jpg'))/255;
 c2  = double(imread('Closed_Lock.jpg'))/255;
@@ -58,20 +57,22 @@ c9  = double(imread('undock.jpg'))/255;
 c10 = double(imread('PlayCDM.jpg'))/255;
 c11 = double(imread('Settings.jpg'))/255;
 c12 = double(imread('Pallet.jpg'))/255;
-save psdabuttons c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12
+c13 = double(imread('book_open.jpg'))/255;
+save psdabuttons c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13
 
-handles.CDataOpen                 = c1; 
-handles.CDataClosed               = c2; 
-handles.toggle1.CData             = c3; 
-handles.runREG.CData              = c4; 
-handles.ax2Limits.CData           = c5; 
-handles.REG_DisplayOptions.CData  = c6; 
-handles.treebutton.CData          = c7; 
-handles.deleteButton.CData        = c8; 
-handles.undock.CData              = c9; 
+handles.CDataOpen                 = c1;
+handles.CDataClosed               = c2;
+handles.toggle1.CData             = c3;
+handles.runREG.CData              = c4;
+handles.ax2Limits.CData           = c5;
+handles.REG_DisplayOptions.CData  = c6;
+handles.treebutton.CData          = c7;
+handles.deleteButton.CData        = c8;
+handles.undock.CData              = c9;
 handles.runCDM.CData              = c10;
 handles.CDM_DisplayOptions.CData  = c11;
 handles.ColorSecondaryLines.CData = c12;
+handles.ref1.CData                = c13;
 
 %% grd buttons
 clearvars
@@ -86,7 +87,6 @@ handles.Exit_button.CData     = c1;
 handles.Distance_button.CData = c2;
 handles.po_refresh_GE.CData   = c3;
 handles.undock.CData          = c4;
-
 
 %% css buttons
 c1  = double(imread('Legend.jpg'))/255;

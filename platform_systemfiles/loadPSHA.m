@@ -46,11 +46,12 @@ for i=1:size(data,1)
     if strfind(data{i,1},'Option 6 '), ptrs(7,1) =i;end
     if strfind(data{i,1},'Option 7 '), ptrs(8,1) =i;end % sites (optional)
     if strfind(data{i,1},'Option 8 '), ptrs(9,1) =i;end % validation (optional)
-    if strfind(data{i,1},'Option 9 '), ptrs(10,1)=i;end % validation (optional)
-    if strfind(data{i,1},'Option 10 '),ptrs(11,1)=i;end % validation (optional)
-    if strfind(data{i,1},'Option 11 '),ptrs(12,1)=i;end % validation (optional)
-    if strfind(data{i,1},'Option 12 '),ptrs(13,1)=i;end % validation (optional)
-    if strfind(data{i,1},'Option 13 '),ptrs(14,1)=i;end % validation (optional)
+    if strfind(data{i,1},'Option 9 '), ptrs(10,1)=i;end % psda (optional)
+    if strfind(data{i,1},'Option 10 '),ptrs(11,1)=i;end % psda (optional)
+    if strfind(data{i,1},'Option 11 '),ptrs(12,1)=i;end % psda (optional)
+    if strfind(data{i,1},'Option 12 '),ptrs(13,1)=i;end % psda (optional)
+    if strfind(data{i,1},'Option 13 '),ptrs(14,1)=i;end % psda (optional)
+    if strfind(data{i,1},'Option 14 '),ptrs(15,1)=i;end % validation (optional)
 end
 ptrs = FindEndPtrs(ptrs,data);
 
