@@ -33,17 +33,10 @@ end
 
 % this is required if you use NGAWest2 models on non-rectangular sources
 rrup  = dist_rrup(r0,rf,rupArea,n);
-if Rmetric(2),  rhyp  = dist_rhyp(r0,rf); end
-if Rmetric(3),  rjb   = rrup; end
-if Rmetric(4),  repi  = rrup; end
-if Rmetric(5),  rseis = rrup;end
-if Rmetric(6),  rx    = rrup;end
-if Rmetric(7),  ry0   = rrup;end
-if Rmetric(8),  zhyp  = dist_zhyp(r0,rf,ellipsoid); end
-if Rmetric(9),  ztor  = dist_zhyp(r0,rf,ellipsoid); end
-if Rmetric(10), zbor  = dist_zhyp(r0,rf,ellipsoid); end
-if Rmetric(11), zbot  = dist_zhyp(r0,rf,ellipsoid); end
-
+UNK   = ones(size(rrup))*999;
+if Rmetric(2), rhyp  = dist_rhyp(r0,rf);           end
+if Rmetric(3), rjb   = dist_rjb(r0,rf,rupArea,n,ellipsoid);  end
+if Rmetric(8), zhyp  = dist_zhyp(r0,rf,ellipsoid); end
 
 %% GMM Parameters
 usp      = source.gmpe.usp;
@@ -88,9 +81,9 @@ for jj=1:Ndepend
         case 'BCHydro2012'
             switch usp.mechanism
                 case 'interface'
-                    param     = {M,rrup,zhyp,usp.mechanism,usp.region,usp.DeltaC1,usp.Vs30};
+                    param   = {M,rrup,zhyp,usp.mechanism,usp.region,usp.DeltaC1,usp.Vs30};
                 case 'intraslab'
-                    param     = {M,rhyp,zhyp,usp.mechanism,usp.region,usp.DeltaC1,usp.Vs30};
+                    param   = {M,rhyp,zhyp,usp.mechanism,usp.region,usp.DeltaC1,usp.Vs30};
             end
         case 'MontalvaBastias2017'
             switch usp.mechanism
@@ -136,46 +129,64 @@ for jj=1:Ndepend
         case 'Idriss2008_nga'
             param     = {M,rrup,usp.mechanism,usp.Vs30};
         case 'ChiouYoungs2008_nga'
-            dip     = geom.dip;
-            z1      = exp(28.5-3.82/8*log(usp.Vs30^8+378.8^8));
-            param   = {M, rrup, rjb, rx, ztor, dip, z1, usp.mechanism, usp.event, usp.Vs30, usp.Vs30type};
+            rjb    =  UNK;
+            rx     = -UNK;
+            ztor   = dist_ztor(r0,rf,rupArea,n,ellipsoid);
+            z1     = exp(28.5-3.82/8*log(usp.Vs30^8+378.8^8));
+            dip    = 90; % not used if no hanging wall amplification is defined
+            param  = {M, rrup, rjb, rx, ztor, dip, z1, usp.mechanism, usp.event, usp.Vs30, usp.Vs30type};
         case 'BooreAtkinson_2008_nga'
+            rjb     = dist_rjb(r0,rf,rupArea,n,ellipsoid);
             param   = {M,rjb,usp.mechanism,usp.Vs30};
         case 'CampbellBozorgnia_2008_nga'
-            dip     = geom.dip;
+            rjb     = dist_rjb(r0,rf,rupArea,n,ellipsoid);
+            ztor    = dist_ztor(r0,rf,rupArea,n,ellipsoid);
+            dip     = nan; % this kills the Hanging Wall Aplification
             param   = {M,rrup, rjb, ztor, dip, usp.mechanism, usp.Vs30, usp.Z25, usp.sigmatype};
         case 'AbrahamsonSilva2008_nga'
-            dip     = geom.dip;
-            dipvec  = [1 -1]*gps2xyz(source.vertices(1:2,:),ellipsoid);
-            W       = norm(dipvec);
+            % no hanging wall computed for irregular polygons
+            rjb     = UNK;
+            ztor    = dist_ztor(r0,rf,rupArea,n,ellipsoid);
+            W       = 999;
             Z10     = Z10_default_AS08_NGA(usp.Vs30);
+            rx      = -UNK;
+            dip     = 90; % this kills f4 in line 134
             param   = {M, rrup, rjb, rx, ztor, dip,W, Z10, usp.Vs30,usp.mechanism,usp.event,usp.Vs30type};
         case 'I_2014_nga'
             param     = {M,rrup,usp.mechanism,usp.Vs30};
         case 'CY_2014_nga'
-            dip     = geom.dip;
-            param   = {M, rrup, rjb, rx, ztor, dip, usp.mechanism, usp.Z10, usp.Vs30, usp.Vs30type, usp.region};
+            rjb   = UNK;
+            rx    = UNK;
+            ztor  = dist_ztor(r0,rf,rupArea,n,ellipsoid);
+            Z10   = 'unk';
+            param   = {M, rrup, rjb, rx, ztor, geom.dip, usp.mechanism, Z10, usp.Vs30, usp.Vs30type, usp.region};
         case 'BSSA_2014_nga'
+            rjb     = dist_rjb(r0,rf,rupArea,n,ellipsoid);
             param   = {M, rjb, usp.mechanism, usp.region, usp.BasinDepth, usp.Vs30};
         case 'CB_2014_nga'
-            dip     = geom.dip;
-            dipvec  = [1 -1]*gps2xyz(source.vertices(1:2,:),ellipsoid);
-            W       = norm(dipvec);
-            param   = {M, rrup, rjb, rx, W, ztor, zbot, dip, usp.mechanism, usp.HW, usp.Vs30, usp.Z25, zhyp, usp.region};
+            rjb   = UNK;
+            rx    = UNK;
+            W     = 999;
+            ztor  = UNK;
+            zbot  = -min(source.vertices(:,3));   %The depth to the bottom of the seismogenic crust
+            param = {M, rrup, rjb, rx, W, ztor, zbot, geom.dip, usp.mechanism, 'exclude', usp.Vs30, usp.Z25, zhyp, usp.region};
         case 'ASK_2014_nga'
-            dip     = geom.dip;
-            dipvec  = [1 -1]*gps2xyz(source.vertices(1:2,:),ellipsoid);
-            W       = norm(dipvec);
-            param={M, rrup, rjb, rx, ry0, ztor, dip, W, usp.mechanism, usp.event, usp.Z10, usp.Vs30, usp.Vs30type, usp.region};
+            % no hanging wall computed for irregular polygons
+            W     =  999;
+            rjb   =  UNK;
+            rx    = -UNK; % this kills the f4 term in line 259
+            ry0   = UNK;
+            ztor  = dist_ztor(r0,rf,rupArea,n,ellipsoid);
+            param = {M, rrup, rjb, rx, ry0, ztor, geom.dip, W, usp.mechanism, usp.event, usp.Z10, usp.Vs30, usp.Vs30type, usp.region};
             
         case 'DW12'
             param = {M,rrup,ups.mechanism,usp.media};
             
         case 'udm'
-            var  = gmpe.var;
-            txt  = regexp(var.syntax,'\(','split');
-            args = regexp(txt{2}(1:end-1),'\,','split');
-            args = strtrim(args);
+            var      = gmpe.var;
+            txt      = regexp(var.syntax,'\(','split');
+            args     = regexp(txt{2}(1:end-1),'\,','split');
+            args     = strtrim(args);
             args(1)  = [];
             param    = cell(1,4+length(args));
             param{1} = str2func(strtrim(txt{1}));
@@ -218,18 +229,14 @@ for jj=1:Ndepend
                 end
             end
         case 'PCE_nga'
-            dip     = geom.dip;
-            W       = source.geom.W;
-            param={M, rrup, rjb, rx, ry0, ztor, dip, W, usp.mechanism, usp.event, usp.Z10, usp.Vs30, usp.Vs30type, usp.region};
+            param={M, rrup, usp.Vs30, usp.Vs30type, usp.region};
         case 'PCE_bchydro'
             param     = {M,rrup,usp.Vs30};
     end
-    
     if strcmpi(gmpe.type,'cond')
         func    = gmpe.cond.conditioning;
         param   = [{M,rrup,func,usp.mechanism,source.Vs30},param]; %#ok<AGROW>
     end
-    
     if isfrn
         funcs {jj}=gmpe.usp.(GMMjj).handle;
         IMlist{jj}=gmpe.usp.(GMMjj).T;
@@ -237,7 +244,7 @@ for jj=1:Ndepend
             case 'regular'
                 PARAM {jj}=param;
             case 'cond'
-                PARAM {jj}= [{M,rrup,gmpe.usp.(GMMjj).cond.conditioning,usp.mechanism,source.Vs30},param]; %#ok<AGROW>
+                PARAM {jj}= [{M,rrup,gmpe.usp.(GMMjj).cond.conditioning,usp.mechanism,source.Vs30},param]; 
             case 'udm'
                 PARAM {jj}=param;
             case 'pce'
@@ -245,7 +252,6 @@ for jj=1:Ndepend
         end
         
     end
-    
 end
 
 if isfrn

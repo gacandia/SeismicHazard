@@ -210,18 +210,15 @@ switch str_test
     case 'I_2014_nga'
         param     = {M,rrup,usp.mechanism,usp.Vs30};
     case 'CY_2014_nga'
-        dip     = geom.dip;
-        param   = {M, rrup, rjb, rx, ztor, dip, usp.mechanism, usp.Z10, usp.Vs30, usp.Vs30type, usp.region};
+        param   = {M, rrup, rjb, rx, ztor, geom.dip, usp.mechanism, usp.Z10, usp.Vs30, usp.Vs30type, usp.region};
     case 'BSSA_2014_nga'
         param   = {M, rjb, usp.mechanism, usp.region, usp.BasinDepth, usp.Vs30};
     case 'CB_2014_nga'
-        dip     = geom.dip;
         W       = source.geom.W;
-        param   = {M, rrup, rjb, rx, W, ztor, zbot, dip, usp.mechanism, usp.HW, usp.Vs30, usp.Z25, zhyp, usp.region};
+        param   = {M, rrup, rjb, rx, W, ztor, zbot, geom.dip, usp.mechanism, usp.HW, usp.Vs30, usp.Z25, zhyp, usp.region};
     case 'ASK_2014_nga'
-        dip     = geom.dip;
         W       = source.geom.W;
-        param={M, rrup, rjb, rx, ry0, ztor, dip, W, usp.mechanism, usp.event, usp.Z10, usp.Vs30, usp.Vs30type, usp.region};
+        param={M, rrup, rjb, rx, ry0, ztor, geom.dip, W, usp.mechanism, usp.event, usp.Z10, usp.Vs30, usp.Vs30type, usp.region};
     case 'udm'
         var  = gmpe.var;
         txt  = regexp(var.syntax,'\(','split');

@@ -86,7 +86,7 @@ if haz.R0
     
     if haz.R2 % displays source contribution
         haz_ptr      = handles.IJK(branch_ptr,1);
-        NOTZERO      = nansum(lambdaD,1)>0;
+        NOTZERO      = nansum(lambdaD,1)>-1;
         source_label = {handles.model(haz_ptr).source.label};
         str          = source_label(NOTZERO);
         lam1         = lambdaD(:,NOTZERO)';
@@ -153,7 +153,7 @@ else
     data = num2cell([d;lam2]); % average
 end
 c    = uicontextmenu;
-uimenu(c,'Label','Copy data','Callback',        {@data2clipboard_uimenu,data});
+uimenu(c,'Label','Copy data','Callback',        {@data2clipboard_uimenu,data'});
 uimenu(c,'Label','Undock','Callback',           {@figure2clipboard_uimenu,handles.ax1});
 uimenu(c,'Label','Undock & compare','Callback', {@figurecompare_uimenu,handles.ax1});
 set(handles.ax1,'uicontextmenu',c);

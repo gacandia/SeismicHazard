@@ -42,6 +42,7 @@ for i=1:Ngeom
                 case 'area'
                     if isempty(source.datasource)
                         [geom.p,geom.pmean,geom.rot]  = rotateplane(source.vertices,ellipsoid);
+                        geom.dip                      = createFit2Dplane(source.vertices,ellipsoid); % average dip angle
                         [~,B]=intersect({sys.RUPT.id},source.label);
                         geom.spacing = sys.RUPT(B).spacing;
                         geom.nref    = sys.RUPT(B).nref;

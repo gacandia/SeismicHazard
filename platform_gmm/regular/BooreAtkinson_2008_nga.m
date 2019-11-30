@@ -144,7 +144,7 @@ Fnl1 = bnl * log (pga_low / 0.1);
 Fnl2 = bnl * log (pga_low / 0.1) + c * (log (pga4nl / a1)).^2 + d * (log (pga4nl / a1)).^3;
 Fnl  = bnl * log (pga4nl / 0.1);
 Fnl(pga4nl <= a2)=Fnl2(pga4nl <= a2);
-Fnl(pga4nl <= a1)=Fnl1(pga4nl <= a1);
+Fnl(pga4nl <= a1)=Fnl1;%(pga4nl <= a1); 
 FS = Flin + Fnl;
 
 % Compute median and sigma

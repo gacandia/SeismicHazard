@@ -40,7 +40,7 @@ seismicity 1 TruncExp #SlipRate in mm/year
 Fault3 handle delta sliprate 2 bvalue 0.9 M 7
 
 Option 6 - RUPTURE AREA SCALING # spacing (km) is the mesh density for areas
-Fault3 type rectangular spacing 1 RA custom 1 4 0 aratio 2 taper true 
+Fault3 type rectangular spacing 0.05 RA custom 1 4 0 aratio 2 taper true 
 
 Option 7 - Pre defined sites (Optional)
 source 760

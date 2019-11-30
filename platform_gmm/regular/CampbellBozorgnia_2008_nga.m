@@ -144,7 +144,11 @@ fflt = c7  * Frv * ffltz + c8  * Fnm;
 % Hanging-wall effects
 fhngz     = ((20 - ztor)/20) .* (ztor >= 0).* (ztor < 20);
 fhngdelta = (dip <= 70) + ((90 - dip)/20) * (dip > 70);
-fhng      = c9  * fhngr .* fhngm .* fhngz * fhngdelta;
+if isnan(fhngdelta)
+    fhng      = zeros(size(M));
+else
+    fhng      = c9  * fhngr .* fhngm .* fhngz * fhngdelta;
+end
 
 % Site conditions
 if Vs30 < k1

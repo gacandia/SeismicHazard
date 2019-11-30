@@ -18,7 +18,7 @@ elseif nargin==2 && exist([matfile,'.mat'],'file')~=2
     h     = handles.h;
     model = handles.model;
     
-    D=what('platform_defaultmodels'); save([D.path,'\',matfile],'model','h','sys','opt');
+    %D=what('platform_defaultmodels'); save([D.path,'\',matfile],'model','h','sys','opt');
     
 elseif nargin==3
     handles.sys = []; handles.model = []; handles.opt = []; handles.h  = [];    

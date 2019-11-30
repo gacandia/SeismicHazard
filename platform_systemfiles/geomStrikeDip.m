@@ -38,3 +38,6 @@ if size(Vertices,1) == 4 && isempty(Code)
         Dip    = acosd(cosD);
     end
 end
+
+
+Dip=abs(Dip);

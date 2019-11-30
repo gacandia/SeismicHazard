@@ -16,6 +16,7 @@ if  and(To<0 || To> 10,To~=-1)
     return
 end
 
+if isnan(W)       ,W    = 999;end
 if ischar(W)      ,W    = 999;end
 if ischar(Zbot(1)),Zbot = 999;end
 if ischar(Zhyp(1)),Zhyp = 999*ones(size(M));end

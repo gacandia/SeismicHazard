@@ -18,6 +18,7 @@ MRD  = zeros(Nsites,Nim,Nim,Nsource,Nbranch);
 
 for i=1:Nsites
     for k=1:Nbranch
+        fprintf('%g\n',k/Nbranch)
         [~,~,MRD(i,:,:,:,k)]=runhazardV1(opt.im,opt.IM,site(i,:),Vs30(i),opt,model(k),Nsource,rho,sourcelist);
     end
 end

@@ -22,6 +22,7 @@ deagg   = cell(size(lambda));
 
 %% run logic tree
 for i=1:Nbranch
+    fprintf('%g\n',i/Nbranch)
     if weights(i)~=0
         deagg(:,:,:,:,i)= runhazard2(im,IM,site,Vs30,opt,model(i),Nsource,sitelist);
     end

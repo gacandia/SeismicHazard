@@ -49,7 +49,6 @@ Nim         = 20;
 rateM       = mscl.dPm;
 NMmin       = mscl.msparam.NMmin;
 gmpefun     = gmpe.handle;
-im          = im;
 Rmetric     = gmpe.Rmetric;
 
 switch source.type

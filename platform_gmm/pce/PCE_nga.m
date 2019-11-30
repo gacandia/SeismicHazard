@@ -1,4 +1,4 @@
-function [lnY,sigma]=PCE_nga(To,M, Rrup, Rjb, Rx, Ry0, Ztor, delta, W, mechanism, event, Z10, Vs30, Vs30type, reg) %#ok<*INUSL>
+function [lnY,sigma]=PCE_nga(To,M, Rrup, Vs30, Vs30type, reg)
 
 if 1
     if  To<0 || To> 10
