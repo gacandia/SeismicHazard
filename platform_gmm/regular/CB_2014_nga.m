@@ -45,6 +45,11 @@ else
     sig        = sqrt(sigma.^2-tau.^2);
 end
 
+if To<0.25
+    lnPGA = gmpe(22,  M, Rrup, Rjb, Rx, W, Ztor,  Zbot, delta, mechanism, HWEffect, Vs30, Z25, Zhyp,reg);
+    lny(lny<lnPGA)=lnPGA(lny<lnPGA);
+end
+
 function[lny,sigma,tau]=gmpe(index, M, Rrup, Rjb, Rx, W, Ztor,  Zbot, delta, mechanism, HWEffect, Vs30, Z25, Zhyp,reg)
 
 % Style of faulting
@@ -210,7 +215,7 @@ elseif region == 3
     Dc20 = Dc20_CH;
 end
 % if region is in Japan
-Sj = region==2;
+Sj = (region==2);
 
 % if Z2.5 is unknown
 if Z25in == 999
@@ -230,13 +235,13 @@ if Z25in == 999
 else
     % Assign Z2.5 from user input into Z25 and calc Z25A for Vs30=1100m/s
     if region ~= 2  % if in California or other locations
-        if A1100==999
+        if A1100(1)==999
             Z25 = Z25in;
         else
             Z25 = exp(7.089 - 1.144 * log(1100));
         end
     elseif region == 2  % if in Japan
-        if A1100==999
+        if A1100(1)==999
             Z25 = Z25in;
         else
             Z25 = exp(5.359 - 1.102 * log(1100));
@@ -248,7 +253,7 @@ end
 fmag1 = c0 + c1 * M;
 fmag2 = c0 + c1 * M + c2 * (M - 4.5);
 fmag3 = c0 + c1 * M + c2 * (M - 4.5) + c3 * (M - 5.5);
-fmag = c0 + c1 * M + c2 * (M - 4.5) + c3 * (M - 5.5) + c4 * (M-6.5);
+fmag  = c0 + c1 * M + c2 * (M - 4.5) + c3 * (M - 5.5) + c4 * (M-6.5);
 fmag(M<=6.5)= fmag3(M<=6.5);
 fmag(M<=5.5)= fmag2(M<=5.5);
 fmag(M<=4.5)= fmag1(M<=4.5);
@@ -264,32 +269,34 @@ F_fltm(M>5.5)=1;
 fflt = ((c8 * Frv) + (c9 * Fnm)).*F_fltm;
 
 % Hanging-wall effects
-
-R1 = W .* cos(pi/180*delta); % W - downdip width
-R2 = 62.* M - 350;
-
-f1_Rx = h1+h2.*(Rx./R1)+h3.*(Rx./R1).^2;
-f2_Rx = h4+h5*((Rx-R1)./(R2-R1))+h6*((Rx-R1)./(R2-R1)).^2;
-f_hngRx=(f1_Rx.*(Rx< R1)+max(f2_Rx,0).*(Rx>=R1))*(Fhw==1);
-
-
-f_hngRup1 = ones(length(M),1);
-f_hngRup = (Rrup-Rjb)./Rrup;
-f_hngRup(Rrup==0) = f_hngRup1(Rrup==0);
-
-f_hngM2 = zeros(length(M),1);
-f_hngM1 = (M-5.5).*(1+a2*(M-6.5));
-f_hngM = 1+a2.*(M-6.5);
-f_hngM(M<=6.5)= f_hngM1(M<=6.5);
-f_hngM(M<=5.5)= f_hngM2(M<=5.5);
-
-f_hngZ1 = zeros(length(M),1);
-f_hngZ = 1-0.06.*Ztor;
-f_hngZ(Ztor>16.66)=f_hngZ1(Ztor>16.66);
-
-f_hngdelta = (90-delta)/45;
-fhng = c10 .* f_hngRx .* f_hngRup .* f_hngM .* f_hngZ .* f_hngdelta;
-
+if delta==90
+    fhng = zeros(size(M));
+else
+    R1 = W .* cosd(delta); % W - downdip width
+    R2 = 62.* M - 350;
+    
+    f1_Rx = h1+h2.*(Rx/R1)+h3.*(Rx/R1).^2;
+    f2_Rx = h4+h5*((Rx-R1)./(R2-R1))+h6*((Rx-R1)./(R2-R1)).^2;
+    
+    if Fhw==0
+        f_hngRx=0;
+    else
+        f_hngRx = f1_Rx;
+        f_hngRx(Rx>=R1)=max(f2_Rx(Rx>=R1),0);
+    end
+    f_hngRup = (Rrup-Rjb)./Rrup;
+    f_hngRup(Rrup==0) = 1;
+    
+    f_hngM = (M-5.5).*(1+a2*(M-6.5));
+    f_hngM(M<=5.5)= 0;
+    f_hngM(M> 6.5)= 1+a2.*(M(M> 6.5)-6.5);
+    
+    f_hngZ = 1-0.06.*Ztor;
+    f_hngZ(Ztor>16.66)=0;
+    
+    f_hngdelta = (90-delta)/45;
+    fhng = c10 .* f_hngRx .* f_hngRup .* f_hngM .* f_hngZ .* f_hngdelta;
+end
 
 % Site conditions
 if Vs30 <= k1
@@ -307,42 +314,33 @@ end
 fsite = f_siteG + f_siteJ;
 
 % Basin Response Term - Sediment effects
+fsed=0;
 if Z25 <= 1
     fsed = (c14+c15*Sj) * (Z25 - 1);
-elseif Z25 <= 3
-    fsed = 0;
-elseif Z25 > 3
+end
+if Z25 > 3
     fsed = c16 * k3 * exp(-0.75) * (1 - exp(-0.25 * (Z25 - 3)));
 end
 
 % Hypocenteral Depth term
-if Zhyp <= 7
-    f_hypH = 0;
-elseif Zhyp <= 20
-    f_hypH = Zhyp - 7;
-else
-    f_hypH = 13;
-end
+f_hypH = Zhyp-7;
+f_hypH(Zhyp <= 7)=0;
+f_hypH(Zhyp > 20)=13;
 
-f_hypM = c18.* ones(length(M),1);
-f_hypM1 = c17 + (c18-c17).*(M-5.5);
-f_hypM2 = c17.* ones(length(M),1);
-f_hypM(M<=6.5)=f_hypM1(M<=6.5);
-f_hypM(M<=5.5)=f_hypM2(M<=5.5);
+f_hypM = c17 + (c18-c17).*(M-5.5);
+f_hypM(M<=5.5)=c17;
+f_hypM(M> 6.5)=c18;
 
 fhyp = f_hypH .* f_hypM;
 
 % Fault Dip term
-f_dip = c19.*delta.*ones(length(M),1);
-f_dip1 = c19*(5.5-M).* delta;
-f_dip2 = zeros(length(M),1);
-f_dip(M>4.5) = f_dip1(M>4.5);
-f_dip(M>5.5) = f_dip2(M>5.5);
+f_dip = c19*(5.5-M)*delta;
+f_dip(M<=4.5) = c19*delta;
+f_dip(M> 5.5) = 0;
 
 % Anelastic Attenuation Term
-f_atn1 = (c20 + Dc20).*(Rrup-80);
-f_atn = zeros(length(M),1);
-f_atn(Rrup>80) = f_atn1(Rrup>80);
+f_atn = (c20 + Dc20)*(Rrup-80);
+f_atn(Rrup<=80) = 0;
 
 
 % Ln median value
@@ -357,23 +355,24 @@ t2To = 0.325;%C(2,38);
 
 % Standard deviation computations
 tau_lny   = t2+(t1-t2).*(5.5-M);
-tau_lnPGA = t2To+(t1To-t2To).*(5.5-M);
+tau_lny(M<=4.5)=t1;
+tau_lny(M>=5.5)=t2;
+
 phi_lny   = f2+(f1-f2).*(5.5-M);
+phi_lny(M<=4.5)=f1;
+phi_lny(M>=5.5)=f2;
+
+tau_lnPGA = t2To+(t1To-t2To).*(5.5-M);
+tau_lnPGA (M<=4.5)= t1To;
+tau_lnPGA (M>=5.5)= t2To;
+
 phi_lnPGA = f2To+(f1To-f2To).*(5.5-M);
-ind1 = (M<=4.5);
-ind3 = (M>=5.5);
-tau_lny   (ind1)= t1;
-tau_lnPGA (ind1)= t1To;
-phi_lny   (ind1)= f1;
-phi_lnPGA (ind1)= f1To;
-tau_lny   (ind3)= t2;
-tau_lnPGA (ind3)= t2To;
-phi_lny   (ind3)= f2;
-phi_lnPGA (ind3)= f2To;
+phi_lnPGA (M<=4.5)= f1To;
+phi_lnPGA (M>=5.5)= f2To;
 
 tau_lnyB = tau_lny;
 tau_lnPGAB = tau_lnPGA;
-phi_lnyB = sqrt(phi_lny.^2-flnAF^2);
+phi_lnyB   = sqrt(phi_lny.^2-flnAF^2);
 phi_lnPGAB = sqrt(phi_lnPGA.^2-flnAF^2);
 
 if (Vs30 < k1)

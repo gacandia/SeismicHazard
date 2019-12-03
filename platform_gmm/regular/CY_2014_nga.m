@@ -230,7 +230,7 @@ end
 if Z10 ==999
     d_Z1 = 0;
 else
-    d_Z1=Z10.*1000-z_1;
+    d_Z1=Z10.*1000-z_1; % ojo aca, Z10 se ingresa en km, internamente se convierte a m
 end
 
 % Dip term

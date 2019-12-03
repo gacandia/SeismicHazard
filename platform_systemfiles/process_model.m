@@ -68,16 +68,22 @@ for i=1:Ngeom
         switch source.mechanism
             case 'shallowcrustal'
                 [geom.strike,geom.dip] = geomStrikeDip(source.vertices,ellipsoid);
-                dipvec = [-1 1]*gps2xyz(source.vertices([1,2],:),ellipsoid);
-                geom.W  = norm(dipvec);
-                angs    = source.vertices([1,4],[2 1])*pi/180;
-                phi1    = angs(1,2);
-                phi2    = angs(2,2);
-                dlambda = angs(1,1)-angs(2,1);
-                dphi    = phi1-phi2;
-                dsigma  = 2*asin(sqrt(sin(dphi/2)^2+cos(phi1)*cos(phi2)*sin(dlambda/2)^2));
-                geom.L  = 6371.00877141506*dsigma;
-                geom.Area = geom.L*geom.W;
+                    dipvec = [-1 1]*gps2xyz(source.vertices([1,2],:),ellipsoid);
+                    geom.W  = norm(dipvec);
+                    strikevec = [-1 1]*gps2xyz(source.vertices([1,4],:),ellipsoid);
+                    geom.L  = norm(strikevec);
+                    
+%                     dipvec = [-1 1]*gps2xyz(source.vertices([1,2],:),ellipsoid);
+%                     geom.W  = norm(dipvec);
+%                     angs    = source.vertices([1,4],[2 1])*pi/180;
+%                     phi1    = angs(1,2);
+%                     phi2    = angs(2,2);
+%                     dlambda = angs(1,1)-angs(2,1);
+%                     dphi    = phi1-phi2;
+%                     dsigma  = 2*asin(sqrt(sin(dphi/2)^2+cos(phi1)*cos(phi2)*sin(dlambda/2)^2));
+%                     geom.L  = 6371.00877141506*dsigma;
+                    geom.Area = geom.L*geom.W;
+                
                 [geom.p,geom.pmean,geom.rot,geom.vertices]  = rotateplane(source.vertices,ellipsoid);
                 
                 [~,B]=intersect({sys.RUPT.id},source.label);

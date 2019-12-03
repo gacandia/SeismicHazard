@@ -107,6 +107,7 @@ handles.Y              = [];
 handles.hdist          = [];
 handles.L              = [];
 handles.optkm          = [];
+handles.pdffile        = [];
 
 % site cluster data
 handles.idx            = [];

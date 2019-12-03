@@ -47,3 +47,4 @@ for i=1:length(z)
         ry0(i) = sum((P1-P2).^2)^0.5;
     end
 end
+

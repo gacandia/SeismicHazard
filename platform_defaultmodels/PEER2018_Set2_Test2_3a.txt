@@ -11,7 +11,7 @@ ShearModulus : 3e11      #dyne/cm2
 IM           : 0
 im           : 1.000E-03 1.000E-02 5.000E-02 1.000E-01 1.500E-01 2.000E-01 2.500E-01 3.000E-01 3.500E-01 4.000E-01 4.500E-01 5.000E-01 5.500E-01 6.000E-01
 MaxDistance  : 500
-MagDiscrete  : gauss 10
+MagDiscrete  : gauss 1
 CGMM         : shuffle MC 500
 IM1          : 0.01
 IM2          : 0.1 0.2 0.5 1 2
@@ -40,7 +40,7 @@ seismicity 1 TruncExp #SlipRate in mm/year
 Fault3 handle delta sliprate 2 bvalue 0.9 M 7
 
 Option 6 - RUPTURE AREA SCALING # spacing (km) is the mesh density for areas
-Fault3 type rectangular spacing 0.1 RA custom 1 4 0 aratio 2 taper true 
+Fault3 type rectangular spacing 0.03 RA custom 1 4 0 aratio 2 taper true 
 
 Option 7 - Pre defined sites (Optional)
 source 760

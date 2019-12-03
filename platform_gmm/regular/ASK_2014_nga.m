@@ -59,8 +59,8 @@ switch reg
 end
 
 switch Vs30type
-    case 'measured', FVS30=0;
-    case 'inferred', FVS30=1;
+    case 'measured', FVS30=1;
+    case 'inferred', FVS30=0;
 end
 
 switch event

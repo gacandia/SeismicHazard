@@ -87,8 +87,8 @@ for i=1:nM
     if Rmetric(7),  ry0{i}   = dist_ry04   (r0,rf,RW,RL,geom,ellipsoid);end
     if Rmetric(8),  zhyp{i}  = dist_zhyp4  (r0,rf,RW,RL,geom,ellipsoid);end
     if Rmetric(9),  ztor{i}  = dist_ztor4  (r0,rf,RW,RL,geom,ellipsoid);end
-    if Rmetric(10), zbor{i}  = dist_zbor4  (r0,rf,RW,RL,geom,ellipsoid);end
-    if Rmetric(11), zbot{i}  = dist_zbot4  (r0,rf,RW,RL,geom,ellipsoid);end
+%     if Rmetric(10), zbor{i}  = dist_zbor4  (r0,rf,RW,RL,geom,ellipsoid);end
+%     if Rmetric(11), zbot{i}  = dist_zbot4  (r0,rf,RW,RL,geom,ellipsoid);end
 end
 
 if Rmetric(1)==1
@@ -120,8 +120,8 @@ if Rmetric(6),  rx    = vertcat(rx   {:});end
 if Rmetric(7),  ry0   = vertcat(ry0  {:});end
 if Rmetric(8),  zhyp  = vertcat(zhyp {:});end
 if Rmetric(9),  ztor  = vertcat(ztor {:});end
-if Rmetric(10), zbor  = vertcat(zbor {:});end  % used in NGA West2, but not necesary if W is given
-if Rmetric(11), zbot  = vertcat(zbot {:});end  % used in NGA West2, but not necesary if W is given
+% if Rmetric(10), zbor  = vertcat(zbor {:});end  % used in NGA West2, but not necesary if W is given
+% if Rmetric(11), zbot  = vertcat(zbot {:});end  % used in NGA West2, but not necesary if W is given
 usp   = gmpe.usp;
 
 %% GMM PARAMETERS
@@ -215,10 +215,10 @@ switch str_test
         param   = {M, rjb, usp.mechanism, usp.region, usp.BasinDepth, usp.Vs30};
     case 'CB_2014_nga'
         W       = source.geom.W;
-        param   = {M, rrup, rjb, rx, W, ztor, zbot, geom.dip, usp.mechanism, usp.HW, usp.Vs30, usp.Z25, zhyp, usp.region};
+        param   = {M, rrup, rjb, rx, W,ztor, 'unk', geom.dip, usp.mechanism, usp.HW, usp.Vs30, usp.Z25,zhyp, usp.region};
     case 'ASK_2014_nga'
         W       = source.geom.W;
-        param={M, rrup, rjb, rx, ry0, ztor, geom.dip, W, usp.mechanism, usp.event, usp.Z10, usp.Vs30, usp.Vs30type, usp.region};
+        param   = {M, rrup, rjb, rx, ry0, ztor, geom.dip, W, usp.mechanism, usp.event, usp.Z10, usp.Vs30, usp.Vs30type, usp.region};
     case 'udm'
         var  = gmpe.var;
         txt  = regexp(var.syntax,'\(','split');

@@ -150,51 +150,6 @@ end
 
 guidata(hObject, handles);
 
-function ValidationPEER2010_Callback(hObject, eventdata, handles)
-
-anw = listdlg('PromptString','PEER 2010 Validation Tests:',...
-    'SelectionMode','single','ListString',{'Set 1 - Case 1','Set 1 - Case 2',...
-    'Set 1 - Case 3' ,'Set 1 - Case 4' ,'Set 1 - Case 5' ,'Set 1 - Case 6',...
-    'Set 1 - Case 7' ,'Set 1 - Case 8a','Set 1 - Case 8b',...
-    'Set 1 - Case 8c','Set 1 - Case 9a','Set 1 - Case 9b',...
-    'Set 1 - Case 10','Set 1 - Case 11',...
-    'Set 1 - Case 12','Set 1 - Case 1 (ECEF)'});
-if isempty(anw)
-    return
-end
-switch anw
-    case 1,  handles=psha_updatemodel(handles,'PEER_Set1_Case1');
-    case 2,  handles=psha_updatemodel(handles,'PEER_Set1_Case2');
-    case 3,  handles=psha_updatemodel(handles,'PEER_Set1_Case3');
-    case 4,  handles=psha_updatemodel(handles,'PEER_Set1_Case4');
-    case 5,  handles=psha_updatemodel(handles,'PEER_Set1_Case5');
-    case 6,  handles=psha_updatemodel(handles,'PEER_Set1_Case6');
-    case 7,  handles=psha_updatemodel(handles,'PEER_Set1_Case7');
-    case 8,  handles=psha_updatemodel(handles,'PEER_Set1_Case8a');
-    case 9,  handles=psha_updatemodel(handles,'PEER_Set1_Case8b');
-    case 10, handles=psha_updatemodel(handles,'PEER_Set1_Case8c');
-    case 11, handles=psha_updatemodel(handles,'PEER_Set1_Case9a');
-    case 12, handles=psha_updatemodel(handles,'PEER_Set1_Case9b');
-    case 13, handles=psha_updatemodel(handles,'PEER_Set1_Case10');
-    case 14, handles=psha_updatemodel(handles,'PEER_Set1_Case11');
-    case 15, handles=psha_updatemodel(handles,'PEER_Set1_Case12');
-    case 16, handles=psha_updatemodel(handles,'PEER_Set1_Case1_ECEF');
-end
-
-plot_sites_PSHA(handles);
-
-if isfield(handles.sys,'lambdaTest')
-    plot(handles.ax2,handles.sys.IM,handles.sys.lambdaTest(1,:),'ko','tag','lambdaTest');
-    Leg=legend(handles.ax2,'Benchmark');
-    ch  = findall(handles.FIGSeismicHazard,'tag','hazardlegend');
-    Leg.Visible='on';
-    Leg.FontSize=8;
-    Leg.EdgeColor=[1 1 1];
-    Leg.Location='SouthWest';
-    Leg.Tag='hazardlegend';
-end
-guidata(hObject,handles)
-
 function ValidationPEER2018_Callback(hObject,envetdata,handles)
 anw = listdlg('PromptString','PEER 2018 Validation Tests:',...
     'SelectionMode','single','ListString',{'Test 1.1','Test 1.2','Test 1.3','Test 1.4','Test 1.5',...
@@ -228,7 +183,7 @@ switch anw
     case 20, handles=psha_updatemodel(handles,'PEER2018_Set2_Test2_3c');
     case 21, handles=psha_updatemodel(handles,'PEER2018_Set2_Test2_3d');
 end
-
+handles.pdffile = handles.sys.filename;
 plot_sites_PSHA(handles);
 
 if isfield(handles.sys,'lambdaTest')
@@ -542,6 +497,11 @@ handles.switchmode.CData=handles.form1;
 handles.switchmode.TooltipString='switch to PSDA mode';
 handles.ax2.XScale='log';
 handles.ax2.YScale='log';
+
+if ispc && isfield(handles.sys,'lambdaTest')
+    comparePEER(handles)
+end
+
 guidata(hObject, handles);
 
 % ---------------- DSHAMENU MENU----------------------------
@@ -1045,8 +1005,9 @@ if ispc
 end
 
 function OpenRef_Callback(hObject, eventdata, handles)
-
-winopen(handles.pdffile)
+if ispc && ~isempty(handles.pdffile) && contains(handles.pdffile,'.pdf')
+    winopen(handles.pdffile)
+end
 
 function ColorSecondaryLines_Callback(hObject, eventdata, handles)
 

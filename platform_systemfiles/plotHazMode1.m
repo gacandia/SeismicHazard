@@ -51,7 +51,6 @@ else % Probability density function
     
 end
 
-
 %% -------------  compute lambda0----------------------------------
 
 switch find(haz.avg(1:3))
@@ -75,9 +74,11 @@ if haz.dbt(3)==1
     y1 = 1-exp(-lambda1*haz.dbt(4));
 end
 
+% notnan = true(size(im));
 if do_tests
-    IM       = handles.sys.IM;
     lambdaTest=handles.sys.lambdaTest(site,:);
+%     notnan=~isnan(lambdaTest);
+    IM       = handles.sys.IM;
     switch haz.dbt(3)
         case 0
             yT = lambdaTest;
@@ -132,9 +133,6 @@ else
 end
 str = [str2,str1,str3];
 
-
-
-
 % -------------  ui context menu ------------------------------------------
 IMstr = handles.IM_select.String{IM_ptr};
 notnan=find(~isnan(sum(lambda1,2)));
@@ -154,12 +152,14 @@ if do_tests==0
     else
         data(1,2:end)=str;
     end
+    handles.OpenRef.Visible='off';
 else
     if size(data,2)==2
         data(1,2:end)=str(1);
     else
         data(1,2:end)=str(1:end-1);
     end
+    handles.OpenRef.Visible='on';
 end
 
 c2 = uicontextmenu;
