@@ -11,8 +11,8 @@ param     = rupt.RA{2};
 if param(3)==0
     rupArea   = rupRelation(M,0,geom.Area,rupt.RA{1},param);
 else
-    NA = 12;
-    x = linspace(-2.5*param(3),2.5*param(3),NA)';
+    NA = 25;
+    x  = linspace(-1,1,NA)';
     dx = x(2)-x(1);
     rateA = normcdf(x+dx/2,0,param(3))-normcdf(x-dx/2,0,param(3));
     rateA = rateA/(normcdf(x(end)+dx/2,0,param(3))-normcdf(x(1)-dx/2,0,param(3)));
@@ -28,7 +28,7 @@ else
     rupArea = rupArea(iA(:));
 end
 aratio    = rupt.aratio;
-rupWidth  = min(sqrt(rupArea/aratio),geom.W); % preserve area at expense of aspect ratio
+rupWidth  = min(sqrt(rupArea/aratio),geom.W);  % preserve area at expense of aspect ratio
 rupLength = min(rupArea./rupWidth,geom.L);     % preserve area at expense of aspect ratio
 
 nM    = length(M);

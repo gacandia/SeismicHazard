@@ -195,6 +195,8 @@ if isfield(handles.sys,'lambdaTest')
     Leg.EdgeColor=[1 1 1];
     Leg.Location='SouthWest';
     Leg.Tag='hazardlegend';
+    handles.ax2.XScale='linear';
+    handles.ax2.YScale='log';
 end
 guidata(hObject,handles)
 
@@ -500,6 +502,8 @@ handles.ax2.YScale='log';
 
 if ispc && isfield(handles.sys,'lambdaTest')
     comparePEER(handles)
+    handles.ax2.XScale='linear';
+    handles.ax2.YScale='log';    
 end
 
 guidata(hObject, handles);
