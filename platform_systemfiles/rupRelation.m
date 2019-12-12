@@ -25,10 +25,10 @@ switch lower(model)
         
     case 'somerville1999'
         a=1.00; b =3.95; sigma = 0.12;
-        logA   = (M-b-sigma*epsilon)/a;
+        logA   = (a*M-b-sigma*epsilon)/a;
         A      = 10.^logA;
         
-    case 'wellscoppersmith1994'
+    case {'wc1994','wellscoppersmith1994'}
         a=0.98; b =4.07; sigma = 0.24;
         logA   = (M-b-sigma*epsilon)/a;
         A      = 10.^logA;

@@ -4,12 +4,6 @@ function [IM,Rmetric,Residuals]=mGMPE_info(model)
 %
 % Function that retuns information about GMPEs
 %
-% un = units of GMPE.
-% For Sa or PGA set 'un' as the following:
-%      un=1       for GMPE that provide IM in dimensionless units
-%      un=9.8066  for GMPE that provide IM in m/s2
-%      un=980.66  for GMPE that provide IM in cm/s2
-%
 % IM = Intensity Measure Id.
 %    = To    for Sa       (Pseudoacceleration at period To, To>0)
 %    =  0    for PGA      (Peak Ground Acceleration)

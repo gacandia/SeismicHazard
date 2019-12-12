@@ -262,11 +262,11 @@ im3     = exp(interp1(xData,yData,logyy(ret_ptr),'pchip'));
 deagg3  = runhazard3(im3,IM,site,Vs30,opt,model,Nsource,1,handles.Ebin);
 deagg3  = vertcat(deagg3{1,1,1,:});
 
-deagg3NC    = deagg3(:,4)*1/sum(deagg3(:,4))*1/handles.returnperiod(ret_ptr); % small correction
-deagg3(:,4) = deagg3(:,4)*1/sum(deagg3(:,4))*1/handles.returnperiod(ret_ptr); % small correction
+deagg3NC    = deagg3(:,5)*1/sum(deagg3(:,5))*1/handles.returnperiod(ret_ptr); % small correction
+deagg3(:,5) = deagg3(:,5)*1/sum(deagg3(:,5))*1/handles.returnperiod(ret_ptr); % small correction
 
-haz    = 1/handles.returnperiod(ret_ptr);
-MREbar = sum(bsxfun(@times,deagg3(:,1:3),deagg3(:,4)),1)/haz;
+haz     = 1/handles.returnperiod(ret_ptr);
+MRHEbar = sum(bsxfun(@times,deagg3(:,1:4),deagg3(:,5)),1)/haz;
 
 handles.bartitle.String={...
     sprintf('Deaggregation for %s'     , handles.IM_menu.String{IM_ptr});...
@@ -274,12 +274,11 @@ handles.bartitle.String={...
     sprintf('Return Period  = %g yr'   , 1/haz)};
 
 handles.bartitle2.String={...
-    sprintf('Mean R M e:');...
-    sprintf('R = %-4.3g km' , MREbar(2));...
-    sprintf('M = %-4.3g'    , MREbar(1));...
-    sprintf('e = %-4.3g'    , MREbar(3))};
+    sprintf('Mean R Zhyp M e:');...
+    sprintf('R = %-4.3g km   Zhyp = %-4.3g km' , MRHEbar(2), MRHEbar(3));...
+    sprintf('M = %-4.3g      e    = %4.3g'    , MRHEbar(1),MRHEbar(4))};
 
-
+data2clipboard_uimenu([],[],MRHEbar)
 ch=findall(handles.ax,'tag','haz1'); ch.XData = im1; ch.YData = lambda1;
 ch=findall(handles.ax,'tag','haz3'); ch.XData = im3; ch.YData = sum(deagg3NC);
 ch=findall(handles.ax,'tag','line'); ch.XData = im3*[1 1]; ch.YData = handles.ax.YLim;

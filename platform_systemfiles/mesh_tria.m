@@ -1,12 +1,19 @@
-function[p,conn,area,hyp]=mesh_tria(pv,lmax,nref)
+function[p,conn,area,hyp]=mesh_tria(pv,lmax,nref,ellip)
 
 % GENERATES TRIANGULAR MESH OF THE 3D SOURCE GIVEN BY p
 m       = mean(pv);
 N       = size(pv, 1);
-pv_mov  = pv-repmat(m,N,1);
+pv_mov  = pv-m;
 covar   = pv_mov'*pv_mov/N;
 [~,~,V] = svd(covar);
 pv_rot  = pv_mov*V;
+
+if max(abs(pv_rot(:,3)))>0.01*max(mean(abs(pv_rot(:,1:2))))
+    % this code handles highly warped sources
+   [p,conn,area,hyp]=mesh_tria_turbo(pv,lmax,nref,ellip);
+    return
+end
+
 [p,conn]=pmesh2(pv_rot(:,1:2),lmax,nref);
 
 %% Computes areas

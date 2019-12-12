@@ -81,7 +81,7 @@ for j=1:NIM
         x           = imj(i);
         xhat        = (log(x)-mu)./sig;
         fa          = 1./(x*sig).*normpdf(xhat); fa(xhat<xhatmin)=0; % truncation
-        deagg       = fa.*rate;
+        deagg       = fa.*rate*1/(1-PHI);
         MRD(i,j)    = NMmin*nansum(deagg);
     end
 end

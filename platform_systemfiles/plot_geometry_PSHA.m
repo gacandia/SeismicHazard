@@ -128,7 +128,7 @@ for i=1:Ngeom
         'tag','areas',...
         'visible','off');
     
-    handles.TT{i}=text(handles.ax1,centroid(:,2),centroid(:,1),{model.source.label},'fontsize',8,'fontweight','bold','visible','off','tag','sourcelabel');
+    handles.TT{i}=text(handles.ax1,centroid(:,2),centroid(:,1),strrep({model.source.label},'_',' '),'fontsize',8,'fontweight','bold','visible','off','tag','sourcelabel');
 end
 
 % TurnsOn selected Source

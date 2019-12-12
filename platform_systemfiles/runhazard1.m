@@ -80,7 +80,7 @@ for j=1:NIM
     for i=1:Nim
         x           = imj(i);
         xhat        = (log(x)-mu)./sig;
-        ccdf        = 0.5*(1-erf(xhat/sqrt(2)))-PHI;
+        ccdf        = (0.5*(1-erf(xhat/sqrt(2)))-PHI)*1/(1-PHI);
         deagg       = ccdf.*rate.*(ccdf>0);
         MRE(i,j)    = NMmin*nansum(deagg);
     end

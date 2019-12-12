@@ -9,7 +9,7 @@ NM   = size(handles.Mbin,1);
 NE   = size(handles.Ebin,1);
 
 deagg3 = zeros(NR,NE,NM);
-lam3   = sum(dg3(:,4));
+lam3   = sum(dg3(:,5));
 
 for j=1:NM
     deagg3(:,:,j)= deagghazardMRe3(dg3,Mbin(j,:),Rbin,Ebin);
@@ -29,8 +29,8 @@ deaggIM = zeros(NR,NE);
 
 M  = deagg(:,1);
 R  = deagg(:,2);
-e  = deagg(:,3);
-dg = deagg(:,4);
+e  = deagg(:,4);
+dg = deagg(:,5);
 M1 = Mbin(1);
 M2 = Mbin(2);
 

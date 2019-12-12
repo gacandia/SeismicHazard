@@ -31,7 +31,7 @@ MRE     = nan (Nsites,Nim,NIM,Nsource,Nbranch);
 MREPCE  = cell(1,Nbranch);
 
 if license('test','Distrib_Computing_Toolbox')
-    parfor i=isREGULAR
+    for i=isREGULAR
         ti=tic;
         ID1=model(i).id1; if length(ID1)>27,ID1=[ID1(1:27),'...'];end
         ID2=model(i).id2; if length(ID2)>27,ID2=[ID2(1:27),'...'];end

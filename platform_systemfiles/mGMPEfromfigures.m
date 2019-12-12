@@ -3,7 +3,7 @@ function handles=mGMPEfromfigures(handles,filename)
 ch=get(handles.panel2,'children');
 set(ch(handles.text),'Visible','off')
 set(ch(handles.edit),'Visible','off','Style','edit');
-units0 = handles.units;
+units0 = 1;
 switch filename
     case {'Abrahamson2016_1.png','Abrahamson2016_2.png','Abrahamson2016_3.png','Abrahamson2016_4.png','Abrahamson2016_5.png','Abrahamson2016_6.png','Abrahamson2016_7.png'}
         str = 'Abrahamson et al. 2016';

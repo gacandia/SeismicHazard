@@ -1,4 +1,4 @@
-function[p,conn,area,hyp]=mesh_tria_turbo(xyz0,lmax,nref)
+function[p,conn,area,hyp]=mesh_tria_turbo(xyz0,lmax,nref,ellipsoid)
 % MESH_TRIA_TURBO correctly handles odd source geometries (non-coplanar points 
 % in 3D space, most listiric faults). 
 % Firt it creates a Mesh proyected on the 'best fititng plane' to identify
@@ -6,7 +6,28 @@ function[p,conn,area,hyp]=mesh_tria_turbo(xyz0,lmax,nref)
 % the first triangulation. Known bugs: for listiric faults that make 90°
 % turns does not work properly.
 
-[xyz,conn0]=mesh_triaT(xyz0,1e10,0);
+gps    = xyz2gps(xyz0,ellipsoid);
+Np     = size(gps,1);
+isEVEN = ~mod(Np,2);
+
+if isEVEN
+    isUSD   = std(gps(1:Np/2,3))<1e6;
+    isLSD   = std(gps(Np/2+1:Np,3))<1e6;
+    isFAULT = max(abs(gps(1:Np/2,3)-gps(Np/2+1:Np,3)))>1e-3;
+    
+    % detects simplefaultgeometries (e.g., as defined in GEM sources)
+    if isUSD && isLSD && isFAULT
+        xyz=xyz0;
+        conn0=[(1:Np/2-1)',(2:Np/2)',(Np-1:-1:Np/2+1)',(Np:-1:Np/2+2)'];
+        conn0=[conn0(:,[1 2 4]);conn0(:,[2 3 4])];
+    else
+        [xyz,conn0]=mesh_triaT(xyz0,1e10,0);
+    end
+else
+    % detects complexfaultgeometries
+    [xyz,conn0]=mesh_triaT(xyz0,1e10,0);
+end
+
 Np = size(xyz,1);
 d  = zeros(Np);
 ind = zeros(1,Np);

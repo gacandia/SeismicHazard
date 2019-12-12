@@ -455,6 +455,12 @@ for i=1:Ns
         y(i).geom.dip = str2double(line{C+1});
     end
     
+    [~,C]=intersect(line,'rake');
+    if ~isempty(C)
+        y(i).geom.rake = str2double(line{C+1});
+    end
+    
+    
     % This is to support geometries from a matfile, e.g. Poulos
     if isempty(strfind(line{B(3)},'.mat'))
         vertices = cellfun(@str2double, line(:,B(3):end));

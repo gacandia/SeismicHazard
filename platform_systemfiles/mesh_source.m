@@ -1,3 +1,4 @@
+%% 
 function[y]=mesh_source(y,opt)
 
 Nsource  = length(y);
@@ -18,8 +19,7 @@ for i=1:Nsource
                         if size(xyz,1)==4
                             [y(i).geom.xyzm,y(i).geom.conn,y(i).geom.aream,y(i).geom.hypm] = mesh_quad(xyz,MaxSize,nref);
                         else
-                            [y(i).geom.xyzm,y(i).geom.conn,y(i).geom.aream,y(i).geom.hypm] = mesh_tria(xyz,MaxSize,nref);
-                            %[y(i).geom.xyzm,y(i).geom.conn,y(i).geom.aream,y(i).geom.hypm] = mesh_tria_turbo(xyz,MaxSize,nref); % beta version
+                            [y(i).geom.xyzm,y(i).geom.conn,y(i).geom.aream,y(i).geom.hypm] = mesh_tria(xyz,MaxSize,nref,ellip);
                         end
                     case 'shallowcrustal'
                         y(i).geom.xyzm  = xyz;

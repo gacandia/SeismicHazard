@@ -74,7 +74,7 @@ sig_overw = 1;
 if ~isempty(sigma)
     switch sigma{1}
         case 'overwrite', std_exp = 0; sig_overw = sigma{2};
-        case 'truncate' , emin = min([emin,sigma{2},emin+sigma{2}]); emax = sigma{2};
+        case 'truncate' , emin = min([emin,sigma{2},emin+sigma{2}]); emax = sigma{2}; PHI = 0.5*(1-erf(sigma{2}/sqrt(2)));
     end
 end
 
@@ -96,11 +96,15 @@ if sig_overw ~= 1
     rate_e(epsilon==sig_overw)=1;
 end
 
+Zhyp = nan(size(param{1}));
 switch gmpe.type
     case 'regular'
     NMR      = size(param{1},1);
     Mag      = repmat(param{1},Neps,1);%creating copies for the magnitude deagregation
     Rup      = repmat(param{2},Neps,1);%creating copies for the distance deagregation
+    if source.gmpe.Rmetric(8)
+        Zhyp = repmat(param{3},Neps,1);%creating copies for the depth deagregation
+    end
     case 'udm'
     NMR      = size(param{5},1);
     Mag      = repmat(param{5},Neps,1);%creating copies for the magnitude deagregation
@@ -130,8 +134,8 @@ for j=1:Nper
     
     for i=1:Nim
         im_i = log(imj(i));
-        ccdf = (lnSa>=im_i);
-        deagg{i,j}  = [Mag,Rup,epsilon,NMmin*ccdf.*rate];%that will provide the rates for all possible combinations of M, D, and epsilon
+        ccdf = (lnSa>=im_i)*1/(1-PHI);
+        deagg{i,j}  = [Mag,Rup,Zhyp,epsilon,NMmin*ccdf.*rate];%that will provide the rates for all possible combinations of M, D, and epsilon
     end
 end
 

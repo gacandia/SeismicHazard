@@ -20,7 +20,7 @@ for i=1:Ngeom
     for j=1:Ns
         source=GEOM(i).source(j);
         clear geom
-        geom = struct('strike',nan,'dip',nan,'W',nan,'L',nan,'Area',[],'p',[],'pmean',[],'rot',[],'spacing',[],'nref',[],'slices',[],'xyzm',[],'conn',[],'aream',[],'hypm',[],'normal',[]);
+        geom = struct('strike',nan,'dip',nan,'rake',nan,'W',nan,'L',nan,'Area',[],'p',[],'pmean',[],'rot',[],'spacing',[],'nref',[],'slices',[],'xyzm',[],'conn',[],'aream',[],'hypm',[],'normal',[]);
         
         if ~contains(source.mechanism,'shallowcrustal')
             switch source.type
@@ -30,7 +30,7 @@ for i=1:Ngeom
                     geom.Area  = 0;
                     GEOM(i).source(j).geom = geom;
                     
-                case 'line'
+                case 'line'                    
                     geom.p     = source.vertices;
                     geom.pmean = source.vertices;
                     geom.Area  = 0;
@@ -43,6 +43,9 @@ for i=1:Ngeom
                     if isempty(source.datasource)
                         [geom.p,geom.pmean,geom.rot]  = rotateplane(source.vertices,ellipsoid);
                         geom.dip                      = createFit2Dplane(source.vertices,ellipsoid); % average dip angle
+                        if isfield(source.geom,'rake')
+                            geom.rake=source.geom.rake;
+                        end
                         [~,B]=intersect({sys.RUPT.id},source.label);
                         geom.spacing = sys.RUPT(B).spacing;
                         geom.nref    = sys.RUPT(B).nref;
@@ -68,21 +71,11 @@ for i=1:Ngeom
         switch source.mechanism
             case 'shallowcrustal'
                 [geom.strike,geom.dip] = geomStrikeDip(source.vertices,ellipsoid);
-                    dipvec = [-1 1]*gps2xyz(source.vertices([1,2],:),ellipsoid);
-                    geom.W  = norm(dipvec);
-                    strikevec = [-1 1]*gps2xyz(source.vertices([1,4],:),ellipsoid);
-                    geom.L  = norm(strikevec);
-                    
-%                     dipvec = [-1 1]*gps2xyz(source.vertices([1,2],:),ellipsoid);
-%                     geom.W  = norm(dipvec);
-%                     angs    = source.vertices([1,4],[2 1])*pi/180;
-%                     phi1    = angs(1,2);
-%                     phi2    = angs(2,2);
-%                     dlambda = angs(1,1)-angs(2,1);
-%                     dphi    = phi1-phi2;
-%                     dsigma  = 2*asin(sqrt(sin(dphi/2)^2+cos(phi1)*cos(phi2)*sin(dlambda/2)^2));
-%                     geom.L  = 6371.00877141506*dsigma;
-                    geom.Area = geom.L*geom.W;
+                dipvec    = [-1 1]*gps2xyz(source.vertices([1,2],:),ellipsoid);
+                geom.W    = norm(dipvec);
+                strikevec = [-1 1]*gps2xyz(source.vertices([1,4],:),ellipsoid);
+                geom.L    = norm(strikevec);
+                geom.Area = geom.L*geom.W;
                 
                 [geom.p,geom.pmean,geom.rot,geom.vertices]  = rotateplane(source.vertices,ellipsoid);
                 
@@ -123,16 +116,38 @@ if strcmpi(msampling{1},'gauss') %gaussian Magnitude sampling
                 case 'delta'
                     M       = param.M;
                     mweight = 1;
+                    [mpdf,~,meanMo]              = seis.handle(M,param);
+                    MSCL(i).seismicity(j).M      = M;
+                    MSCL(i).seismicity(j).dPm    = mweight.*mpdf/(mweight'*mpdf);
+                    MSCL(i).seismicity(j).meanMo = meanMo;
                     
                 case 'truncexp'
-                    nM          = msampling{2};
-                    minterval   = [param.Mmin,param.Mmax];
-                    [M,mweight] = gaussquad(nM,minterval);
+                    if isfield(param,'sigmab')
+                        nM          = msampling{2};
+                        minterval   = [param.Mmin,param.Mmax];
+                        [M,mweight] = gaussquad(nM,minterval);
+                        [mpdf,~,meanMo]              = seis.handle(M,param);
+                        MSCL(i).seismicity(j).M      = M;
+                        MSCL(i).seismicity(j).dPm    = mweight.*mpdf/(mweight'*mpdf);
+                        MSCL(i).seismicity(j).meanMo = meanMo;
+                    else
+                        nM          = msampling{2};
+                        minterval   = [param.Mmin,param.Mmax];
+                        [M,mweight] = gaussquad(nM,minterval);
+                        [mpdf,~,meanMo]              = seis.handle(M,param);
+                        MSCL(i).seismicity(j).M      = M;
+                        MSCL(i).seismicity(j).dPm    = mweight.*mpdf/(mweight'*mpdf);
+                        MSCL(i).seismicity(j).meanMo = meanMo;
+                    end
                     
                 case 'truncnorm'
                     nM          = msampling{2};
                     minterval   = [param.Mmin, param.Mmax];
                     [M,mweight] = gaussquad(nM,minterval);
+                    [mpdf,~,meanMo]              = seis.handle(M,param);
+                    MSCL(i).seismicity(j).M      = M;
+                    MSCL(i).seismicity(j).dPm    = mweight.*mpdf/(mweight'*mpdf);
+                    MSCL(i).seismicity(j).meanMo = meanMo;
                     
                 case 'youngscoppersmith'
                     nM      = msampling{2};
@@ -144,12 +159,13 @@ if strcmpi(msampling{1},'gauss') %gaussian Magnitude sampling
                     [M2,mweight2] = gaussquad(nM2,mint2);
                     M       = [M1;M2];
                     mweight = [mweight1;mweight2];
+                    [mpdf,~,meanMo]              = seis.handle(M,param);
+                    MSCL(i).seismicity(j).M      = M;
+                    MSCL(i).seismicity(j).dPm    = mweight.*mpdf/(mweight'*mpdf);
+                    MSCL(i).seismicity(j).meanMo = meanMo;
                     
             end
-            [mpdf,~,meanMo]              = seis.handle(M,param);
-            MSCL(i).seismicity(j).M      = M;
-            MSCL(i).seismicity(j).dPm    = mweight.*mpdf/(mweight'*mpdf);
-            MSCL(i).seismicity(j).meanMo = meanMo;
+            
         end
     end
 end

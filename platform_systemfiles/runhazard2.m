@@ -62,13 +62,14 @@ end
 deagg     = cell(Nim,Nper);
 std_exp   = 1;
 sig_overw = 1;
-PHI       = erf(inf/sqrt(2));
+PHI       = 0;
 if ~isempty(sigma)
     switch sigma{1}
         case 'overwrite', std_exp = 0; sig_overw = sigma{2};
-        case 'truncate' , PHI = erf(sigma{2}/sqrt(2));
+        case 'truncate' , PHI = 0.5*(1-erf(sigma{2}/sqrt(2)));
     end
 end
+
 
 switch gmpe.type
     case 'regular'
@@ -112,7 +113,7 @@ switch gmpe.type
             imj = im(:,j);
             for i=1:Nim
                 xhat        = (log(imj(i))-mu)./sig;
-                ccdf        = 0.5*(PHI-erf(xhat/sqrt(2)));
+                ccdf        = (0.5*(1-erf(xhat/sqrt(2)))-PHI)*1/(1-PHI);
                 deagg{i,j}  = [Mag,Rrup,NMmin*ccdf.*rate];
             end
         end        
