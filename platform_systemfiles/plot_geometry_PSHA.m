@@ -35,6 +35,7 @@ for i=1:Ngeom
     
     % plots sqares and triangles
     conn     = vcatdss(model.source)+offset;
+    conn2    = conn;
     del      = sum(isnan(conn),2)==size(conn,2);
     conn(del,:)=[];
     if isempty(conn)
@@ -51,7 +52,6 @@ for i=1:Ngeom
         'visible','off');
     
     % plots linesources nodes
-    conn2  = vcatdss(model.source)+offset;
     del    = sum(isnan(conn2),2)~=2;
     conn2(del,:)=[];
     conn2(:,3:end)=[];
@@ -128,7 +128,7 @@ for i=1:Ngeom
         'tag','areas',...
         'visible','off');
     
-    handles.TT{i}=text(handles.ax1,centroid(:,2),centroid(:,1),strrep({model.source.label},'_',' '),'fontsize',8,'fontweight','bold','visible','off','tag','sourcelabel');
+    handles.TT{i}=text(handles.ax1,centroid(:,2),centroid(:,1),strrep({model.source.label},'_',' '),'fontsize',8,'fontweight','bold','visible','off','tag','sourcelabel','horizontalalignment','center');
 end
 
 % TurnsOn selected Source

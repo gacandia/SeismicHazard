@@ -12,15 +12,19 @@ RUPT      = sys.RUPT;
 GMPELIB   = sys.GMPELIB;
 msampling = opt.MagDiscrete;
 
-%% PROCESS GEOMETRY
-Ngeom = length(GEOM);
+isordered  = isequal({sys.GEOM.source.label},{sys.MSCL.seismicity.source},{sys.RUPT.id});
 
+
+%% PROCESS GEOMETRY
+tt=cputime;
+fprintf('%-20s','Process GEOM:')
+Ngeom = length(GEOM);
+geom0=struct('strike',nan,'dip',nan,'rake',nan,'W',nan,'L',nan,'Area',[],'p',[],'pmean',[],'rot',[],'spacing',[],'nref',[],'slices',[],'xyzm',[],'conn',[],'aream',[],'hypm',[],'normal',[]);
 for i=1:Ngeom
     Ns = length(GEOM(i).source);
     for j=1:Ns
         source=GEOM(i).source(j);
-        clear geom
-        geom = struct('strike',nan,'dip',nan,'rake',nan,'W',nan,'L',nan,'Area',[],'p',[],'pmean',[],'rot',[],'spacing',[],'nref',[],'slices',[],'xyzm',[],'conn',[],'aream',[],'hypm',[],'normal',[]);
+        geom = geom0;
         
         if ~contains(source.mechanism,'shallowcrustal')
             switch source.type
@@ -30,7 +34,7 @@ for i=1:Ngeom
                     geom.Area  = 0;
                     GEOM(i).source(j).geom = geom;
                     
-                case 'line'                    
+                case 'line'
                     geom.p     = source.vertices;
                     geom.pmean = source.vertices;
                     geom.Area  = 0;
@@ -42,11 +46,23 @@ for i=1:Ngeom
                 case 'area'
                     if isempty(source.datasource)
                         [geom.p,geom.pmean,geom.rot]  = rotateplane(source.vertices,ellipsoid);
-                        geom.dip                      = createFit2Dplane(source.vertices,ellipsoid); % average dip angle
-                        if isfield(source.geom,'rake')
+                        
+                        if ~isnan(source.geom.dip)
+                            geom.dip=source.geom.dip;
+                        else
+                            geom.dip = createFit2Dplane(source.vertices,ellipsoid); % average dip angle
+                        end
+                        
+                        if ~isnan(source.geom.rake)
                             geom.rake=source.geom.rake;
                         end
-                        [~,B]=intersect({sys.RUPT.id},source.label);
+                        
+                        if isordered
+                            B=j;
+                        else
+                            [~,B]=intersect({sys.RUPT.id},source.label);
+                        end
+                        
                         geom.spacing = sys.RUPT(B).spacing;
                         geom.nref    = sys.RUPT(B).nref;
                         geom.slices  = sys.RUPT(B).slices;
@@ -66,31 +82,33 @@ for i=1:Ngeom
                         GEOM(i).source(j).geom = geom;
                     end
             end
-        end
-        
-        switch source.mechanism
-            case 'shallowcrustal'
-                [geom.strike,geom.dip] = geomStrikeDip(source.vertices,ellipsoid);
-                dipvec    = [-1 1]*gps2xyz(source.vertices([1,2],:),ellipsoid);
-                geom.W    = norm(dipvec);
-                strikevec = [-1 1]*gps2xyz(source.vertices([1,4],:),ellipsoid);
-                geom.L    = norm(strikevec);
-                geom.Area = geom.L*geom.W;
-                
-                [geom.p,geom.pmean,geom.rot,geom.vertices]  = rotateplane(source.vertices,ellipsoid);
-                
+        else % contains(source.mechanism,'shallowcrustal')
+            [geom.strike,geom.dip] = geomStrikeDip(source.vertices,ellipsoid);
+            dipvec    = [-1 1]*gps2xyz(source.vertices([1,2],:),ellipsoid);
+            geom.W    = norm(dipvec);
+            strikevec = [-1 1]*gps2xyz(source.vertices([1,4],:),ellipsoid);
+            geom.L    = norm(strikevec);
+            geom.Area = geom.L*geom.W;
+            
+            [geom.p,geom.pmean,geom.rot,geom.vertices]  = rotateplane(source.vertices,ellipsoid);
+            if isordered
+                B=j;
+            else
                 [~,B]=intersect({sys.RUPT.id},source.label);
-                geom.spacing = sys.RUPT(B).spacing;
-                geom.nref    = sys.RUPT(B).nref;
-                geom.slices  = sys.RUPT(B).slices;
-                GEOM(i).source(j).geom = geom;
+            end
+            geom.spacing = sys.RUPT(B).spacing;
+            geom.nref    = sys.RUPT(B).nref;
+            geom.slices  = sys.RUPT(B).slices;
+            GEOM(i).source(j).geom = geom;
         end
     end
 end
+fprintf('%4.3f s\n',cputime-tt)
 
 %% PROCESS MAGNITUDE SCALING
+tt=cputime;
+fprintf('%-20s','Process MSCL:')
 Nmscl = length(MSCL);
-
 if strcmpi(msampling{1},'gauss') %gaussian Magnitude sampling
     for i=1:Nmscl
         Nsource = length(MSCL(i).seismicity);
@@ -98,7 +116,7 @@ if strcmpi(msampling{1},'gauss') %gaussian Magnitude sampling
             seis  = MSCL(i).seismicity(j);
             param = seis.msparam;
             label = MSCL(i).seismicity(j).source;
-            [I,J] = getgeomptr(GEOM,label);
+            [I,J] = getgeomptr(GEOM,label,j,isordered);
             source  = GEOM(I).source(J);
             if isfield(param,'catalog')
                 [~,~,ext]= fileparts(param.catalog);
@@ -120,6 +138,18 @@ if strcmpi(msampling{1},'gauss') %gaussian Magnitude sampling
                     MSCL(i).seismicity(j).M      = M;
                     MSCL(i).seismicity(j).dPm    = mweight.*mpdf/(mweight'*mpdf);
                     MSCL(i).seismicity(j).meanMo = meanMo;
+                    
+                case 'magtable'
+                    minMag   = param.minmag;
+                    binWidth = param.binwidth;
+                    lambdaM  = param.lambdaM;
+                    Nm       = length(param.lambdaM);
+                    Mmin     = minMag-binWidth/2;
+                    Mmax     = (Mmin+binWidth*(Nm-1));
+                    M        = (Mmin:binWidth:Mmax);
+                    MSCL(i).seismicity(j).M      = M(:);
+                    MSCL(i).seismicity(j).dPm    = lambdaM/sum(lambdaM);
+                    MSCL(i).seismicity(j).meanMo = nan;
                     
                 case 'truncexp'
                     if isfield(param,'sigmab')
@@ -165,7 +195,6 @@ if strcmpi(msampling{1},'gauss') %gaussian Magnitude sampling
                     MSCL(i).seismicity(j).meanMo = meanMo;
                     
             end
-            
         end
     end
 end
@@ -178,7 +207,7 @@ if strcmpi(msampling{1},'uniform') % uniform magnitude bins (brute force)
             param   = seis.msparam;
             % runs Catalog Declustering
             label = MSCL(i).seismicity(j).source;
-            [I,J] = getgeomptr(GEOM,label);
+            [I,J] = getgeomptr(GEOM,label,j,isordered);
             source  = GEOM(I).source(J);
             if isfield(param,'catalog')
                 [~,~,ext]= fileparts(param.catalog);
@@ -195,6 +224,18 @@ if strcmpi(msampling{1},'uniform') % uniform magnitude bins (brute force)
                 case 'delta'
                     M       = param.M;
                     mweight = 1;
+                    
+                case 'magtable'
+                    minMag   = param.minmag;
+                    binWidth = param.binwidth;
+                    lambdaM  = param.lambdaM;
+                    Nm       = length(param.lambdaM);
+                    Mmin     = minMag-binWidth/2;
+                    Mmax     = (Mmin+binWidth*(Nm-1));
+                    M        = Mmin:binWidth:Mmax;
+                    MSCL(i).seismicity(j).M      = M(:);
+                    MSCL(i).seismicity(j).dPm    = lambdaM/sum(lambdaM);
+                    MSCL(i).seismicity(j).meanMo = nan;
                     
                 case 'truncexp'
                     dM = msampling{2};
@@ -218,17 +259,24 @@ if strcmpi(msampling{1},'uniform') % uniform magnitude bins (brute force)
         end
     end
 end
+fprintf('%4.3f s\n',cputime-tt)
 
 %% MESH SOURCES
+tt=cputime;
+fprintf('%-20s','Process RUPT:')
 for i=1:Ngeom
+    
     GEOM(i).source=mesh_source(GEOM(i).source,opt);
     Ns = length(GEOM(i).source);
     for j=1:Ns
         GEOM(i).source(j).geom.Area = sum(GEOM(i).source(j).geom.aream);
     end
 end
+fprintf('%4.3f s\n',cputime-tt)
 
 %% BUILDS MODEL STRUCTURE
+tt=cputime;
+fprintf('%-20s','Process MODEL:')
 Ntot          = size(branch,1);
 model(1:Ntot) = struct('id',[],'id1',[],'id2',[],'id3',[],'isregular',[],'source',[]);
 
@@ -244,14 +292,22 @@ for cont=1:Ntot
         gptr  = GMPE(j).ptrs(sgmpe);
         source(p).gmpe= GMPELIB(gptr);
         
-        [~,B] = intersect(sourcenames,source(p).label,'stable');
+        if isordered
+            B=p;
+        else
+            [~,B] = intersect(sourcenames,source(p).label,'stable');
+        end
         msclB    = msc.seismicity(B);
         source(p).mscl = msclB;
     end
-    
     sourcenames = {RUPT.id};
+    
     for p=1:length(source)
-        [~,B] = intersect(sourcenames,source(p).label,'stable');
+        if isordered
+            B=p;
+        else
+            [~,B] = intersect(sourcenames,source(p).label,'stable');
+        end
         source(p).rupt = RUPT(B);
     end
     
@@ -260,8 +316,11 @@ for cont=1:Ntot
     model(cont).id3 = MSCL(k).id;
     model(cont).source = source;
 end
+fprintf('%4.3f s\n',cputime-tt)
 
 %% COMPUTES ACTIVITY RATES
+tt=cputime;
+fprintf('%-20s','Process RATE:')
 for i=1:Ntot
     Nsource = length(model(i).source);
     for j=1:Nsource
@@ -278,6 +337,10 @@ for i=1:Ntot
             model(i).source(j).mscl.msparam.NMmin = NMmin;
         end
         
+        if isfield(msparam,'lambdaM')
+            model(i).source(j).mscl.msparam.NMmin=model(i).source(j).mscl.msparam.lambdaM(1);
+        end
+        
         % Saves SlipRate to model.source.mscl
         mu    = opt.ShearModulus;                       % dyne/cm2
         A     = model(i).source(j).geom.Area* 1e10;     % cm2
@@ -285,6 +348,7 @@ for i=1:Ntot
         model(i).source(j).mscl.SlipRate = NMmin*meanMo/(mu*A) * 10; % mm/year
     end
 end
+fprintf('%4.3f s\n',cputime-tt)
 
 %% DEFINES IF IS A REGULAR- OR PCE- MODEL
 isREGULAR = runhazcheck(model);
@@ -298,13 +362,19 @@ for i=1:Ntot
     end
 end
 
-function [I,J] = getgeomptr(GEOM,label)
+function [I,J] = getgeomptr(GEOM,label,j,isordered)
 
 for i=1:length(GEOM)
-    [~,J]=intersect({GEOM(i).source.label},label);
-    if ~isempty(J)
+    if isordered
+        J=j;
         I=i;
         break
+    else
+        [~,J]=intersect({GEOM(i).source.label},label);
+        if ~isempty(J)
+            I=i;
+            break
+        end
     end
 end
 

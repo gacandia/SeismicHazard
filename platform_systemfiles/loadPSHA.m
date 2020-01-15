@@ -125,6 +125,8 @@ weight = [
 weight = [weight,prod(weight,2)];
 
 %% READS SURCE GEOMETRY
+tt=cputime;
+fprintf('%-20s','Reading GEOM:')
 str = data(ptrs(3,1):ptrs(3,2),:);
 pt  = zeros(Ngeom,2); j=1;
 pt(end)=size(str,1);
@@ -143,6 +145,8 @@ end
 for i=1:Ngeom
     GEOM(i).source=readGeometry(str(pt(i,1):pt(i,2)));
 end
+% load saraGEOM GEOM
+fprintf('%4.3f s\n',cputime-tt)
 
 %% READS GMPE LIBRRY
 str = data(ptrs(4,1):ptrs(4,2),:);
@@ -251,7 +255,7 @@ for i=1:length(GMPELIB)
     end
 end
 
-%% READS GMPE GROUP DATA
+% READS GMPE GROUP DATA
 str = data(ptrs(5,1):ptrs(5,2),:);
 clear GMPEGROUP
 GMPE(1:size(str,1)) = struct('id',[],'ptrs',[]);
@@ -263,6 +267,8 @@ for i=1:size(str,1)
 end
 
 %% READS MAGNITUDE SCALING
+tt=cputime;
+fprintf('%-20s','Reading MSCL:')
 str = data(ptrs(6,1):ptrs(6,2),:);
 pt  = zeros(Nmscl,2); j=1;
 pt(end)=size(str,1);
@@ -282,10 +288,15 @@ end
 for i=1:Nmscl
     MSCL(i).seismicity = readSeismicity(str(pt(i,1):pt(i,2)));
 end
+% load saraMSCL MSCL
+fprintf('%4.3f s\n',cputime-tt)
 
 %% READS RUPTURE AREA DATA
+tt=cputime;
+fprintf('%-20s','Reading RUPT:')
 str = data(ptrs(7,1):ptrs(7,2),:);
 RUPT(1:size(str,1)) = struct('id',[],'type',[],'spacing',[],'nref',0,'slices',[],'taper',[],'RA',[],'aratio',[]);
+
 for i=1:size(str,1)
     linea = regexp(str{i},'\s+','split');
     RUPT(i).id   = linea{1};
@@ -308,11 +319,13 @@ for i=1:size(str,1)
         end
         RUPT(i).RA={linea{B},param};
     end
-    
-    
 end
+% load saraRUPT RUPT
+fprintf('%4.3f s\n',cputime-tt)
 
 %% READS SITES
+tt=cputime;
+fprintf('%-20s','Reading SITES:')
 h.id        = cell(0,1);
 h.p         = zeros(0,3);
 h.Vs30      = zeros(0,1);
@@ -373,6 +386,7 @@ else
     VS30.baseline=760;
     VS30.source  ={' '};
 end
+fprintf('%4.3f s\n',cputime-tt)
 
 %% READS VALIDATION HAZARD CURVES (optional)
 do_validation=0;
@@ -419,7 +433,6 @@ y(1:Ns)=struct(...
     'thickness',[],...
     'gptr',[],...
     'geom',[]);
-
 for i=1:Ns
     line = regexp(str{i},'\s+','split');
     y(i).label      = line{1};
@@ -451,15 +464,16 @@ for i=1:Ns
     end
     
     [~,C]=intersect(line,'dip');
+    y(i).geom.dip=nan;
     if ~isempty(C)
         y(i).geom.dip = str2double(line{C+1});
     end
     
     [~,C]=intersect(line,'rake');
+    y(i).geom.rake=nan;
     if ~isempty(C)
         y(i).geom.rake = str2double(line{C+1});
     end
-    
     
     % This is to support geometries from a matfile, e.g. Poulos
     if isempty(strfind(line{B(3)},'.mat'))
@@ -489,18 +503,39 @@ for i=1:Ns
     linea(1)=[];
     [~,B]  = intersect(linea,{'handle'});
     y(i).handle=str2func(linea{B+1});
-    linea(B:B+1)=[];
     
-    clearvars usp
-    np = length(linea);
-    for ii=1:np/2
-        fldname = linea{2*ii-1};
-        if strcmp(fldname,'catalog')
-            value   = lower(linea{2*ii});
-        else
-            value   = str2double(lower(linea{2*ii}));
+    usp=struct;
+    if strcmp(linea{B+1},'magtable')
+        linea(B:B+1)=[];
+        
+        [~,C]=intersect(linea,'minmag');
+        if ~isempty(C)
+            usp.minmag= str2double(linea{C+1});
         end
-        usp.(fldname) = value;
+        
+        [~,C]=intersect(linea,'binwidth');
+        if ~isempty(C)
+            usp.binwidth= str2double(linea{C+1});
+        end
+        
+        [~,C]=intersect(linea,'occurrates');
+        if ~isempty(C)
+            usp.lambdaM= str2double(linea(C+1:end))';
+        end
+
+    else
+        linea(B:B+1)=[];
+        
+        np = length(linea);
+        for ii=1:np/2
+            fldname = linea{2*ii-1};
+            if strcmp(fldname,'catalog')
+                value   = lower(linea{2*ii});
+            else
+                value   = str2double(lower(linea{2*ii}));
+            end
+            usp.(fldname) = value;
+        end
     end
     y(i).msparam = usp;
 end

@@ -16,7 +16,7 @@ gris      = [0.76 0.76 0.76];
 if haz.L0
     lambdaCDM2 = nansum(handles.lambdaCDM(:,site_ptr,:,:,model_ptr),4);
     lambdaCDM2 = permute(lambdaCDM2,[1 3 2]);
-    lambdaCDM2(lambdaCDM2<0)=nan;
+    lambdaCDM2(any(lambdaCDM2<0,2),:)=[];
     notnan = true(size(lambdaCDM2,1),1);
     
     if haz.L4
@@ -30,7 +30,6 @@ if haz.L0
     % plot median
     yplot  = zeros(0,length(d));
     if haz.L1
-        lambdaCDM2(all(lambdaCDM2==0,2),:)=[];
         y = exp(nanmean(log(lambdaCDM2),1));
         plot(handles.ax1,d,y,'linewidth',2,'DisplayName','Median');
         yplot=[yplot;y];

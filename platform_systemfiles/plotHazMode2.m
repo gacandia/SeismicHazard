@@ -89,7 +89,9 @@ plot(handles.ax2,im',y0','-','ButtonDownFcn',{@myfun,handles},'tag','lambda0','l
 % mycolor = [linspace(c1(1),c2(1),Ny)',linspace(c1(2),c2(2),Ny)',linspace(c1(3),c2(3),Ny)'];
 % handles.ax2.ColorOrder=[0 0.477 0.741; mycolor];
 y1(y1<0)=nan;
-
+if isempty(y1)
+    y1=nan(size(im));
+end
 if or(haz.sbh(2),haz.sbh(3))
     plot(handles.ax2,im',y1','-','ButtonDownFcn',{@myfun,handles},'tag','lambda1','visible','on')
 else

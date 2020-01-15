@@ -10,8 +10,8 @@ BX = max(norm(r2-r1),norm(r3-r4));
 BY = max(norm(r2-r3),norm(r4-r1));
 
 LMAX  = lmax/(nref+1);
-nx    = ceil(BX/LMAX)+1;
-ny    = ceil(BY/LMAX)+1;
+nx    = max(ceil(BX/LMAX)+1,2);
+ny    = max(ceil(BY/LMAX)+1,2);
 p     = zeros(nx*ny,3);
 
 edge1=[linspace(r1(1),r2(1),nx)',...

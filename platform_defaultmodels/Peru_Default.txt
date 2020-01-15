@@ -23,7 +23,7 @@ Mscl Weight : 1
 
 Option 2 - Source Geometry
 geometry 1 SENCICO, 2016
-F1  type area  mechanism interface  gmpe 1 vertices   -1.314   -79.928    -50    -2.447   -79.697    -50   -2.217  -81.742   -25    -1.163    -81.67    -25       2.11    -80.38     -25    1.666    -78.778    -50                                                                       
+F1  type area  mechanism interface  gmpe 1 vertices    1.666   -78.778    -50    -1.314   -79.928    -50    -2.447   -79.697    -50   -2.217  -81.742   -25    -1.163    -81.67    -25       2.11    -80.38     -25                                                                       
 F2  type area  mechanism interface  gmpe 1 vertices   -3.458   -81.851    -25    -5.322   -82.054    -25   -8.528  -80.991   -25     -7.74   -79.267    -50     -5.595   -80.368     -50   -2.439    -79.699    -50   -2.274   -81.236      -25                                    
 F3  type area  mechanism interface  gmpe 1 vertices   -8.528   -80.991    -25   -10.322   -80.022    -25  -14.412  -77.184   -25   -13.563   -75.856    -60    -10.464   -77.824     -60    -7.74    -79.267    -60                                                                
 F4  type area  mechanism interface  gmpe 1 vertices    -15.8     -75.8    -25    -16.88    -74.36    -25  -16.039   -73.43   -65   -13.548   -75.834    -65    -14.392   -77.155     -25
@@ -36,7 +36,7 @@ F10 type area  mechanism intraslab  gmpe 2 vertices  -16.347   -73.778    -70   
 F11 type area  mechanism intraslab  gmpe 2 vertices  -17.328    -71.66    -70   -18.134   -70.558    -70    -17.4    -69.8  -140   -14.405   -71.584   -140    -16.347   -73.778     -65                                                                                            
 F12 type area  mechanism intraslab  gmpe 2 vertices  -22.999    -70.48    -70   -22.999   -69.275   -100  -22.999  -67.872  -150   -21.766   -67.911   -150     -19.61    -68.56    -155   -18.55     -69.02   -150    -17.4     -69.8     -140    -18.143   -70.558      -100
 F13 type area  mechanism intraslab  gmpe 2 vertices   -2.798   -77.716   -200    -4.725   -78.667   -120   -8.763  -76.472  -130     -8.12   -75.489   -140     -6.771   -74.558    -150   -4.332    -76.164   -130   -2.911   -75.255     -150                               
-F14 type area  mechanism intraslab  gmpe 2 vertices  -10.831   -76.441   -130   -12.871   -74.775   -120  -12.219  -73.794  -130    -8.763   -76.472   -130      -6.92   -77.474    -120   -7.352    -78.423   -120                                                           
+F14 type area  mechanism intraslab  gmpe 2 vertices    -6.92   -77.474   -120   -7.352    -78.423   -120  -10.831  -76.441  -130   -12.871   -74.775   -120     -12.219  -73.794    -130   -8.763    -76.472   -130      
 F15 type area  mechanism intraslab  gmpe 2 vertices  -10.513   -75.116   -145   -12.219   -73.794   -130   -11.41  -72.577  -135   -10.572   -73.319   -150     -9.331   -74.417    -150    -8.12    -75.489   -140   -8.763   -76.472     -130                               
 F16 type area  mechanism intraslab  gmpe 2 vertices  -13.635   -73.119   -120   -14.405   -71.584   -150  -13.766  -70.646  -135   -11.405   -72.575   -135     -12.77   -74.584    -125                                                                                      
 F17 type area  mechanism intraslab  gmpe 2 vertices   -2.798   -77.716   -200    -2.865   -76.245   -170   -1.914  -75.638  -170    -0.922   -77.119   -200     -1.161     -78.4    -125   -2.129    -79.033   -125                                                           
@@ -106,32 +106,32 @@ F28 handle truncexp NMmin 2.85 bvalue 0.7240 Mmin 4.5 Mmax 7.0  # beta 1.667
 F29 handle truncexp NMmin 1.42 bvalue 0.5468 Mmin 4.3 Mmax 7.1  # beta 1.259
                                                             
 Option 6 - RUPTURE AREA SCALING
-F1  type circular spacing 100 RA custom 1 4 0 taper false
-F2  type circular spacing 100 RA custom 1 4 0 taper false
-F3  type circular spacing 100 RA custom 1 4 0 taper false
-F4  type circular spacing 100 RA custom 1 4 0 taper false
-F5  type circular spacing 100 RA custom 1 4 0 taper false
-F6  type circular spacing 100 RA custom 1 4 0 taper false
-F7  type circular spacing 100 RA custom 1 4 0 taper false
-F8  type circular spacing 100 RA custom 1 4 0 taper false
-F9  type circular spacing 100 RA custom 1 4 0 taper false
-F10 type circular spacing 100 RA custom 1 4 0 taper false
-F11 type circular spacing 100 RA custom 1 4 0 taper false
-F12 type circular spacing 100 RA custom 1 4 0 taper false
-F13 type circular spacing 100 RA custom 1 4 0 taper false
-F14 type circular spacing 100 RA custom 1 4 0 taper false
-F15 type circular spacing 100 RA custom 1 4 0 taper false
-F16 type circular spacing 100 RA custom 1 4 0 taper false
-F17 type circular spacing 100 RA custom 1 4 0 taper false
-F18 type circular spacing 100 RA custom 1 4 0 taper false
-F19 type circular spacing 100 RA custom 1 4 0 taper false
-F20 type circular spacing 100 RA custom 1 4 0 taper false
-F21 type circular spacing 100 RA custom 1 4 0 taper false
-F22 type circular spacing 100 RA custom 1 4 0 taper false
-F23 type circular spacing 100 RA custom 1 4 0 taper false
-F24 type circular spacing 100 RA custom 1 4 0 taper false
-F25 type circular spacing 100 RA custom 1 4 0 taper false
-F26 type circular spacing 100 RA custom 1 4 0 taper false
-F27 type circular spacing 100 RA custom 1 4 0 taper false
-F28 type circular spacing 100 RA custom 1 4 0 taper false
-F29 type circular spacing 100 RA custom 1 4 0 taper false
+F1  type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F2  type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F3  type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F4  type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F5  type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F6  type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F7  type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F8  type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F9  type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F10 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F11 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F12 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F13 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F14 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F15 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F16 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F17 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F18 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F19 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F20 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F21 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F22 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F23 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F24 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F25 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F26 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F27 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F28 type circular spacing 90 nref 1 RA custom 1 4 0 taper false
+F29 type circular spacing 90 nref 1 RA custom 1 4 0 taper false

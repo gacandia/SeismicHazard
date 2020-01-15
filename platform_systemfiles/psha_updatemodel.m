@@ -26,6 +26,8 @@ elseif nargin==3
     handles.model = process_model(handles.sys,handles.opt);
 end
 
+
+
 handles.isREGULAR = find(horzcat(handles.model.isregular)==1);
 handles.isPCE     = find(horzcat(handles.model.isregular)==0);
 

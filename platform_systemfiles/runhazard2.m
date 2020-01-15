@@ -114,6 +114,7 @@ switch gmpe.type
             for i=1:Nim
                 xhat        = (log(imj(i))-mu)./sig;
                 ccdf        = (0.5*(1-erf(xhat/sqrt(2)))-PHI)*1/(1-PHI);
+                ccdf        = ccdf.*(ccdf>0);
                 deagg{i,j}  = [Mag,Rrup,NMmin*ccdf.*rate];
             end
         end        

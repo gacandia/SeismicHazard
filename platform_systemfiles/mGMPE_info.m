@@ -123,9 +123,7 @@ if nargout>=2
         case 'bssa_2014_nga',              Rmetric=[0 0 1 0 0 0 0 0 0 0 0];  Residuals = 'lognormal';
         case 'cb_2014_nga',                Rmetric=[1 0 1 0 0 1 0 1 1 0 1];  Residuals = 'lognormal';
         case 'ask_2014_nga',               Rmetric=[1 0 1 0 0 1 1 0 1 0 0];  Residuals = 'lognormal';
-        
         case 'dw12'        ,               Rmetric=[1 0 0 0 0 0 0 0 0 0 0];  Residuals = 'lognormal';
-            
         case 'condsa',                     Rmetric=[0 0 0 0 0 0 0 0 0 0 0];  Residuals = 'lognormal';
         case 'condpgv',                    Rmetric=[0 0 0 0 0 0 0 0 0 0 0];  Residuals = 'lognormal';
         case 'macedo2019',                 Rmetric=[1 0 0 0 0 0 0 0 0 0 0];  Residuals = 'lognormal';

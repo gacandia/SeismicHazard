@@ -42,7 +42,7 @@ seismicity 1 TruncExp  #SlipRate in mm/year
 S1  handle truncexp NMmin 0.0395 bvalue 0.9 Mmin 5 Mmax 6.5
 
 Option 6 - RUPTURE AREA SCALING
-S1 type circular spacing 10 nref 2 RA custom 1 inf 0 taper false
+S1 type circular spacing 10 nref 1 RA custom 1 inf 0 taper false
 
 Option 7 - Pre defined sites (Optional)
 source 760

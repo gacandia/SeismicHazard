@@ -63,7 +63,7 @@ switch handles.HoldPlot.Value
         handles.ax1.ColorOrderIndex = 1;
     case 1
 end
-
+y(y<=0)=nan;
 plot(handles.ax1,x,y,'tag','curves','ButtonDownFcn',@click_on_curve,'handlevisibility','off');
 handles.xlabel=xlabel(handles.ax1,'Magnitude','fontsize',10);
 

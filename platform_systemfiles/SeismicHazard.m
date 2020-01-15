@@ -476,20 +476,20 @@ slistc = 1:length(unique(idx));
 str    = sprintf('%s%s',opt.LiteMode,opt.Clusters{1});
 
 switch handles.sys.filename
-    case 'USGS_NHSM_2008', handles=runhazUSGS(handles);
-    case 'USGS_NHSM_2014', handles=runhazUSGS(handles);
-    otherwise
-        switch str
-            case 'onoff'  , [handles.MRE,handles.MREPCE] = runlogictree0(handles.sys,handles.model,opt,handles.h ,slist);
-            case 'onon'   , [handles.MRE,handles.MREPCE] = runlogictree0(handles.sys,handles.model,opt,handles.hc,idx);
-            case 'offoff' , [handles.MRE,handles.MREPCE] = runlogictree1(handles.sys,handles.model,opt,handles.h ,slist);
-            case 'offon'  , [handles.MRE,handles.MREPCE] = runlogictree1(handles.sys,handles.model,opt,handles.hc,slistc,idx);
-        end
-        
-        handles.site_menu.Value  = handles.site_selection(1);
-        plot_hazard_PSHA(handles);
-        handles.site_colors = compute_v(handles);
-        plot_hazardmap_PSHA(handles);
+   case 'USGS_NHSM_2008', handles=runhazUSGS(handles);
+   case 'USGS_NHSM_2014', handles=runhazUSGS(handles);
+   otherwise
+       switch str
+           case 'onoff'  , [handles.MRE,handles.MREPCE] = runlogictree0(handles.sys,handles.model,opt,handles.h ,slist);
+           case 'onon'   , [handles.MRE,handles.MREPCE] = runlogictree0(handles.sys,handles.model,opt,handles.hc,idx);
+           case 'offoff' , [handles.MRE,handles.MREPCE] = runlogictree1(handles.sys,handles.model,opt,handles.h ,slist);
+           case 'offon'  , [handles.MRE,handles.MREPCE] = runlogictree1(handles.sys,handles.model,opt,handles.hc,slistc,idx);
+       end
+
+       handles.site_menu.Value  = handles.site_selection(1);
+       plot_hazard_PSHA(handles);
+       handles.site_colors = compute_v(handles);
+       plot_hazardmap_PSHA(handles);
 end
 handles.platformMode = 1;
 handles.PSHApannel.Visible='on';
@@ -501,9 +501,9 @@ handles.ax2.XScale='log';
 handles.ax2.YScale='log';
 
 if ispc && isfield(handles.sys,'lambdaTest')
-    comparePEER(handles)
-    handles.ax2.XScale='linear';
-    handles.ax2.YScale='log';    
+   comparePEER(handles)
+   handles.ax2.XScale='linear';
+   handles.ax2.YScale='log';    
 end
 
 guidata(hObject, handles);

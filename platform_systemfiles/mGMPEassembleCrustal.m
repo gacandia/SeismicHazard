@@ -213,6 +213,8 @@ switch str_test
         param   = {M, rrup, rjb, rx, ztor, geom.dip, usp.mechanism, usp.Z10, usp.Vs30, usp.Vs30type, usp.region};
     case 'BSSA_2014_nga'
         param   = {M, rjb, usp.mechanism, usp.region, usp.BasinDepth, usp.Vs30};
+        save mydata2 param
+        1
     case 'CB_2014_nga'
         W       = source.geom.W;
         param   = {M, rrup, rjb, rx, W,ztor, 'unk', geom.dip, usp.mechanism, usp.HW, usp.Vs30, usp.Z25,zhyp, usp.region};
