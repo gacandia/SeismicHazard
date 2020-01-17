@@ -2,13 +2,18 @@ function[haz]=haz_PSDA(handles)
 handles.site_selection = 1:size(handles.h.p,1);
 opt = handles.opt;
 
+fprintf('\n');
+t0 = tic;
+fprintf('                               PROBABILISTIC SEISMIC HAZARD\n');
+fprintf('-----------------------------------------------------------------------------------------------------------\n');
+
 % finds what integration methods are declared in the logic tree
 T3       = handles.T3(:,2:5);
 [imethod,usedM]  = getmethod(handles,T3);
 haz=struct('imstandard',[],'IMstandard',[],'lambda',[],'deagg',[],'imvector',[],'IMvector',[],'corrlist',[],'MRD',[]);
 
 if any(ismember(imethod,[1 2]))
-    handles.opt = opt_update(handles,usedM,opt,1);
+    handles.opt    = opt_update(handles,usedM,opt,1);
     haz.imstandard = handles.opt.im;
     haz.IMstandard = handles.opt.IM;
     [haz.lambda,haz.deagg]=runlogictree2(handles);
@@ -57,6 +62,9 @@ if any(ismember(imethod,[3 4])) % Ellen´s rigid and flexible slopes
         [haz.MRD(:,:,:,:,:,ii)]=runlogictree2V(handles,corrlist(ii),sourcelist);
     end
 end
+
+fprintf('-----------------------------------------------------------------------------------------------------------\n');
+fprintf('%-88sTotal:     %-4.3f s\n','',toc(t0));
 
 function[imethod,usedM]=getmethod(handles,T3)
 

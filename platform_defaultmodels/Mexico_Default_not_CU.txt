@@ -174,5 +174,6 @@ Polochic2        type circular spacing 30 RA custom 1 4 0 taper false
 Polochic3        type circular spacing 30 RA custom 1 4 0 taper false 
 
 Option 7 - Pre defined sites
-source 1000
-SCRU  16.187 -95.209  0
+source 760
+SCRU  16.187   -95.209  0
+RABO  18.5691  -98.4454 0

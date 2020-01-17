@@ -12,10 +12,10 @@ if param(3)==0
     rupArea   = rupRelation(M,0,geom.Area,rupt.RA{1},param);
 else
     NA = 25;
-    x  = linspace(-1,1,NA)';
+    x  = linspace(-2,2,NA)';
     dx = x(2)-x(1);
-    rateA = normcdf(x+dx/2,0,param(3))-normcdf(x-dx/2,0,param(3));
-    rateA = rateA/(normcdf(x(end)+dx/2,0,param(3))-normcdf(x(1)-dx/2,0,param(3)));
+    rateA = normcdf(x+dx/2,0,1)-normcdf(x-dx/2,0,1);
+    rateA = rateA/sum(rateA);
     rupArea = zeros(length(M),NA);
     for i=1:NA
         rupArea(:,i) = rupRelation(M,x(i),geom.Area,rupt.RA{1},param);

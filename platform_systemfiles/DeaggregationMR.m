@@ -47,7 +47,7 @@ rmin  = 0;  rmax  = 180; dr    = 20;
 handles.Rbin      = [(rmin:dr:rmax-dr)',(rmin:dr:rmax-dr)'+dr];
 mmin  = 5; mmax  = 9.2; dm    = 0.2;
 handles.Mbin      = [(mmin:dm:mmax-dm)',(mmin:dm:mmax-dm)'+dm];
-handles.returnperiod = [30;43;72;108;144;224;336;475;712;975;1462;1950;2475;3712;4975;7462;9950;19900];
+handles.returnperiod = [30;43;72;108;144;224;250;336;475;712;949;1462;1950;2475;3712;4975;7462;9950;19900];
 %--------------------------------------------------------------------------
 
 handles.popreturn.String   = num2cell(handles.returnperiod);
@@ -271,7 +271,7 @@ xData=xData(IND);
 yData=yData(IND);
 
 
-handles.returnperiod      = [30;43;72;108;144;224;336;475;712;975;1462;1950;2475;3712;4975;7462;9950;19900];
+handles.returnperiod = [30;43;72;108;144;224;250;336;475;712;949;1462;1950;2475;3712;4975;7462;9950;19900];
 handles.popreturn.String  = num2cell(handles.returnperiod);
 
 ff = [find(handles.returnperiod<min(1./exp(xData)));

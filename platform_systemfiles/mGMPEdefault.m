@@ -613,8 +613,11 @@ switch str
         handles.e7.BackgroundColor=[1 1 0.7];
         handles.e8.BackgroundColor=[1 1 0.7];
         
-        
-    case 'DW12'
+end
+
+%% CAV MODELS - 
+switch str
+case 'DW12'
         set(txt(1:4),'Visible','on');
         set(edi(1:4),'Visible','on');
         handles.t1.String='Mw';
@@ -633,9 +636,39 @@ switch str
         handles.e4.BackgroundColor=[1 1 0.7];
         
         handles.rad1.Value=0;
-        handles.rad2.Value=1;
+        handles.rad2.Value=1;    
+    
+case 'FG15'
+        set(txt(1:8),'Visible','on');
+        set(edi(1:8),'Visible','on');
+        handles.t1.String='Mw';
+        handles.t2.String='Rrup (km)';
+        handles.t3.String='H (km)';
+        handles.t4.String='Mechanism';
+        handles.t5.String='Style';
+        handles.t6.String='Vs30';
+        handles.t7.String='Region';
+        handles.t8.String='Model';
+        
+        handles.e1.String='7.0';
+        handles.e2.String='50';
+        handles.e3.String='15';
+        handles.e4.Style='popupmenu'; handles.e4.Value=1; handles.e4.String={'inslab','interface','crustal'};
+        handles.e5.Style='popupmenu'; handles.e5.Value=1; handles.e5.String={'reverse','normal'};
+        handles.e6.String='760';
+        handles.e7.Style='popupmenu'; handles.e7.Value=1; handles.e7.String={'forearc','backarc','other'};
+        handles.e8.Style='popupmenu'; handles.e8.Value=1; handles.e8.String={'linear','nonlinear'};
+        
+        handles.e1.BackgroundColor=[1 1 0.7];
+        handles.e2.BackgroundColor=[1 1 0.7];
+        handles.e3.BackgroundColor=[1 1 0.7];
+        handles.e4.BackgroundColor=[1 1 0.7];
+        
+        handles.rad1.Value=0;
+        handles.rad2.Value=1;         
         
 end
+    
 
 %% user defined models
 switch str

@@ -43,7 +43,7 @@ seismicity 1 Delta  #SlipRate in mm/year
 S1  handle delta sliprate 2 bvalue 0.9 M 6.0
 
 Option 6 - RUPTURE AREA SCALING
-S1 type rectangular spacing 0.02 RA custom 1 4 0.5 aratio 2 taper true 
+S1 type rectangular spacing 0.02 RA custom 1 4 0.25 aratio 2 taper true 
 
 Option 7 - Pre defined sites (Optional)
 source 760

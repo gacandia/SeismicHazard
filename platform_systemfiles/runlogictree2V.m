@@ -15,11 +15,14 @@ for i=1:Nbranch
 end
 MRD  = zeros(Nsites,Nim,Nim,Nsource,Nbranch);
 
-
+im = opt.im;
+IM = opt.IM;
 for i=1:Nsites
-    for k=1:Nbranch
-        fprintf('%g\n',k/Nbranch)
-        [~,~,MRD(i,:,:,:,k)]=runhazardV1(opt.im,opt.IM,site(i,:),Vs30(i),opt,model(k),Nsource,rho,sourcelist);
+    site_i = site(i,:);
+    Vs30i  = Vs30(i); 
+    parfor k=1:Nbranch
+        fprintf('V-PSHA Branch   %i of %i - Site %i\n',k,Nbranch,i)
+        [~,~,MRD(i,:,:,:,k)]=runhazardV1(im,IM,site_i,Vs30i,opt,model(k),Nsource,rho,sourcelist);
     end
 end
 

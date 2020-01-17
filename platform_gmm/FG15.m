@@ -1,4 +1,4 @@
-function [lny,sigma,tau,phi] = FG15(T,Mw,Rrup,H,event_type,mechanism,Vs30,region,model)
+function [lny,sigma,tau,phi] = FG15(T,Mw,Rrup,H,mechanism,style_faulting,Vs30,region,model)
 
 % Foulser-Piggott, R., & Goda, K. (2015). Ground?motion prediction models
 % for Arias intensity and cumulative absolute velocity for Japanese
@@ -16,12 +16,12 @@ end
 
 e1  = -1;  %Preguntar por el valor, -1 por mientras
 
-switch mechanism
+switch style_faulting
     case 'reverse', Frv=1;  Fnm=0;
     case 'normal',  Frv=0;  Fnm=1;
 end
 
-switch event_type
+switch mechanism
     case 'inslab',      Finslab=1; Finterface=0;
     case 'interface',   Finslab=0; Finterface=1;
     case 'crustal',     Finslab=0; Finterface=0;
@@ -30,7 +30,7 @@ end
 switch region
     case 'forearc',     Frfa=1; Frba=0;
     case 'backarc',     Frfa=0; Frba=1;
-    case 'otherwise',   Frfa=0; Frba=0;
+    case 'other',       Frfa=0; Frba=0;
 end
 
 %Model coefficients

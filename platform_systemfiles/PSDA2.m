@@ -547,13 +547,20 @@ YL = handles.ax1.YLim;   plot(handles.ax1,Da*[1 1],YL,'k--','tag','kdesign','han
 drawnow
 handles.ax1.ColorOrderIndex=1;
 home
+fprintf('\n')
+t0 = tic;
+fprintf('                        SEISMIC PSEUDOSTATIC COEFFICIENT (SPC)\n');
+fprintf('-----------------------------------------------------------------------------------------------------------\n');
 for i = 1:Nbranches
-    fprintf('PSDA branch %g ',i)
     kydata(i) = runPSDA_singlebranch(handles,Tr,Da,i);
     leg{i}   = sprintf('PSDA %g (k = %.3f)',i,kydata(i).ky);
     model{i} = sprintf('PSDA %g',i);
-    fprintf('ky=%4.3g ; iter=%2i ; error=%3.2g\n',kydata(i).ky,kydata(i).iter,abs(kydata(i).error))
+    fprintf('PSDA branch %-3i ky=%-4.3f ; iter=%-2i ; error=%-3.2g\n',i,kydata(i).ky,kydata(i).iter,abs(kydata(i).error))
 end
+
+fprintf('-----------------------------------------------------------------------------------------------------------\n');
+fprintf('%-88sTotal:     %-4.3f s\n','',toc(t0));
+
 handles.kydata=kydata;
 plot(handles.ax1,kydata(1).d,vertcat(kydata.lambdaD))
 
@@ -568,15 +575,21 @@ format long g
 data = num2cell([kydata(1).d;vertcat(kydata.lambdaD)]');
 c    = uicontextmenu;
 
-uimenu(c,'Label','Summary Table','Callback',{@data2table_uimenu,model,vertcat(kydata.ky)});
-uimenu(c,'Label','Copy data','Callback',    {@data2clipboard_uimenu,data});
-uimenu(c,'Label','Undock','Callback',       {@figure2clipboard_uimenu,handles.ax1,tit});
+uimenu(c,'Label','Summary Table'     ,'Callback',{@data2table_uimenu,model,vertcat(kydata.ky)});
+uimenu(c,'Label','Create Histogram'  ,'Callback',{@data2hist_uimenu,vertcat(kydata.ky)});
+uimenu(c,'Label','Copy data'         ,'Callback',{@data2clipboard_uimenu,data});
+uimenu(c,'Label','Undock'            ,'Callback',{@figure2clipboard_uimenu,handles.ax1,tit});
 set(handles.ax1,'uicontextmenu',c);
 format(cF);
 
 function data2table_uimenu(~, ~,model,k)
 
 disp(table(model,k));
+
+function data2hist(~,~,k)
+histogram(k)
+xlabel('SPC')
+ylabel('Freequency')
 
 function runMRDeagg_Callback(hObject, eventdata, handles)
 T1    = handles.T1;

@@ -159,6 +159,12 @@ switch str
         
     case 'DW12'
         param{1}=ON*param{1}; %Mw
+        param{2}=Rrup;
+        
+    case 'FG15'
+        param{1}=ON*param{1}; %Mw
         param{2}=Rrup;        
+        param{3}=ON*param{3}; %Mw
+        
 
 end

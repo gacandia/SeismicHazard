@@ -21,8 +21,8 @@ lambda  = nan(Nsites,Nim,NIM,Nsource,Nbranch);
 deagg   = cell(size(lambda));
 
 %% run logic tree
-for i=1:Nbranch
-    fprintf('%g\n',i/Nbranch)
+parfor i=1:Nbranch
+    fprintf('  PSHA Branch   %i of %i - All sites\n',i,Nbranch)
     if weights(i)~=0
         deagg(:,:,:,:,i)= runhazard2(im,IM,site,Vs30,opt,model(i),Nsource,sitelist);
     end

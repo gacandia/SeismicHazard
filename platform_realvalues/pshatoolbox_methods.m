@@ -41,12 +41,12 @@ if group ==1
     i=i+1; ME(i).label = 'ASK 2014 - NGAW2';             ME(i).func = @ASK_2014_nga;               ME(i).type='regular';  ME(i).ref='https://doi.org/10.1193/070913eqs198m';
   
     % CAV and Arias Intensity
-    i=i+1; ME(i).label = 'Du & Wang, 2012';              ME(i).func = @DW12;                       ME(i).type='regular';  ME(i).ref='https://doi.org/10.1002/eqe.2266';
-    i=i+1; ME(i).label = 'Foulser-Piggott, Goda (2015)'; ME(i).func = @FG15;                       ME(i).type='regular';  ME(i).ref='https://doi.org/10.1785/0120140316';
+    i=i+1; ME(i).label = 'Du & Wang, 2012';                   ME(i).func = @DW12;                       ME(i).type='regular';  ME(i).ref='https://doi.org/10.1002/eqe.2266';
+    i=i+1; ME(i).label = 'Foulser-Piggott, Goda (2015)';      ME(i).func = @FG15;                       ME(i).type='regular';  ME(i).ref='https://doi.org/10.1785/0120140316';
     i=i+1; ME(i).label = 'Travasarou, Bray, Abrahamson 2003'; ME(i).func = @BTA03;                 ME(i).type='regular';  ME(i).ref='https://doi.org/10.1002/eqe.270';
-    i=i+1; ME(i).label = 'Bullock et al, 2017';          ME(i).func = @BU17;                       ME(i).type='regular';  ME(i).ref='https://doi.org/10.1785/0120160388';
-    i=i+1; ME(i).label = 'Campbell,Bozorgnia 2019';      ME(i).func = @CB19;                       ME(i).type='regular';  ME(i).ref='https://www.earthquakespectra.org/doi/abs/10.1193/090818EQS212M';
-    i=i+1; ME(i).label = 'Kramer & Mitchell, 2006';      ME(i).func = @KM06;                       ME(i).type='regular';  ME(i).ref='https://doi.org/10.1193/1.2194970';
+    i=i+1; ME(i).label = 'Bullock et al, 2017';               ME(i).func = @BU17;                       ME(i).type='regular';  ME(i).ref='https://doi.org/10.1785/0120160388';
+    i=i+1; ME(i).label = 'Campbell,Bozorgnia 2019';           ME(i).func = @CB19;                       ME(i).type='regular';  ME(i).ref='https://www.earthquakespectra.org/doi/abs/10.1193/090818EQS212M';
+    i=i+1; ME(i).label = 'Kramer & Mitchell, 2006';           ME(i).func = @KM06;                       ME(i).type='regular';  ME(i).ref='https://doi.org/10.1193/1.2194970';
     
     % special GMMs
     i=i+1; ME(i).label = 'Conditional CAV (MA19)';       ME(i).func = @MA19;                       ME(i).type='cond';     ME(i).ref='www.google.com';

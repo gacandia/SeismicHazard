@@ -49,8 +49,7 @@ for site_ptr=1:Nsites
         % run sources
         indlist = selectsource(opt.MaxDistance,xyz,handles.model(indT1).source,opt.ellipsoid);
         indlist = find(indlist);
-        for source_ptr=indlist
-            
+        for source_ptr = indlist
             mechanism = handles.model(indT1).source(source_ptr).mechanism;
             
             switch mechanism
@@ -113,7 +112,6 @@ for site_ptr=1:Nsites
                     end
                 end
             end
-            
             lambdaD(site_ptr,:,source_ptr,branch_ptr) = hd;
         end
         fprintf(spat,site_ptr,branch_ptr,Nbranches,toc(ti))

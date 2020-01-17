@@ -312,6 +312,19 @@ switch methods(val2).str
         mechanism = str{3};
         media     = str{4};
         param    = {M, Rrup, mechanism, media};
+        
+    case 'FG15'
+        %
+        M      = str2double(str{1});
+        Rrup   = str2double(str{2});
+        H      = str2double(str{3});
+        mechanism = str{4};
+        style    = str{5};
+        Vs30   = str2double(str{6});
+        region = str{7};
+        model  = str{8};
+        param  = {M,Rrup,H,mechanism,style,Vs30,region,model};
+        
     case 'udm'
         param = cell(0,0);
 end
