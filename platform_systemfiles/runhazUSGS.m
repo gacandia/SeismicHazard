@@ -30,7 +30,7 @@ fprintf('                               SEISMIC HAZARD ANALYSIS \n');
 fprintf('-----------------------------------------------------------------------------------------------------------\n');
 t0  = cputime;
 rootst = 'https://earthquake.usgs.gov/nshmp-haz-ws/hazard';
-for j=handles.site_selection
+parfor j=handles.site_selection
     t=cputime;
     url = sprintf('%s/%s/%s/%g/%g/%s/%g/%g/',rootst,Edition, Region, lon(j), lat(j),IMstr, Vs30);
     lam = read_USGS_hazard(url,IM,Nsource);
@@ -57,6 +57,7 @@ if ~isempty(handles.h.t)
     handles.po_sites.Value=1;
     handles.HazardMap.Enable='on';
     handles.po_contours.Value=1;
+    handles.site_colors = compute_v(handles);
     plot_hazardmap_PSHA(handles);
 end
 
