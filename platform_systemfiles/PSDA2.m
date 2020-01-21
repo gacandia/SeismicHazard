@@ -586,8 +586,10 @@ function data2table_uimenu(~, ~,model,k)
 
 disp(table(model,k));
 
-function data2hist(~,~,k)
-histogram(k)
+function data2hist_uimenu(~,~,k)
+figure
+N = length(k);
+histogram(k,min(N,20));
 xlabel('SPC')
 ylabel('Freequency')
 

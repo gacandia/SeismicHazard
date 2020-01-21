@@ -70,7 +70,7 @@ end
 sigma     = gmpe.usp.sigma;
 std_exp   = 1;
 sig_overw = 1;
-
+PHI = 0;
 if ~isempty(sigma)
     switch sigma{1}
         case 'overwrite', std_exp = 0; sig_overw = sigma{2};

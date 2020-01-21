@@ -44,13 +44,13 @@ handles.model  = process_model(handles.sys,handles.opt);
 
 % Build interface to adjust this piece of code
 %--------------------------------------------------------------------------
-rmin  = 0;  rmax  = 600; dr    = 60;
+rmin  = 0;  rmax  = 360; dr    = 40;
 handles.Rbin      = [(rmin:dr:rmax-dr)',(rmin:dr:rmax-dr)'+dr];
-mmin  = 5;  mmax  = 9; dm    = 0.2;
+mmin  = 5;  mmax  = 9.6; dm    = 0.2;
 handles.Mbin      = [(mmin:dm:mmax-dm)',(mmin:dm:mmax-dm)'+dm];
 emin  = -2; emax  = 2; de    = 1;
 handles.Ebin      = [[-inf emin];(emin:de:emax-de)',(emin:de:emax-de)'+de;[emax,inf]];
-handles.returnperiod = [30;43;72;108;144;224;336;475;712;975;1462;1950;2475;3712;4975;7462;9950;19900];
+handles.returnperiod = [30;43;72;108;144;224;250;336;475;712;949;975;1462;1950;2475;3712;4975;7462;9950;19900];
 %--------------------------------------------------------------------------
 
 handles.popreturn.String   = num2cell(handles.returnperiod);

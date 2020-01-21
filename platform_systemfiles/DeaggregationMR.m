@@ -43,7 +43,7 @@ handles.model  = process_model(handles.sys,handles.opt);
 
 % Build interface to adjust this piece of code
 %--------------------------------------------------------------------------
-rmin  = 0;  rmax  = 180; dr    = 20;
+rmin  = 0;  rmax  = 360; dr    = 40;
 handles.Rbin      = [(rmin:dr:rmax-dr)',(rmin:dr:rmax-dr)'+dr];
 mmin  = 5; mmax  = 9.2; dm    = 0.2;
 handles.Mbin      = [(mmin:dm:mmax-dm)',(mmin:dm:mmax-dm)'+dm];
