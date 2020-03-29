@@ -264,3 +264,12 @@ if ~isnan(ind1)
     end
 end
 
+%% SPC Data
+ind1 =sys.PTRS(16,1);
+ind2 =sys.PTRS(16,2);
+if ~isnan(ptrs(16,1))
+    line1 = regexp(sys.DATA{ind1},'\ ','split');
+    line2 = regexp(sys.DATA{ind2},'\ ','split');
+    handles.SPCData=[1/eval(line1{2}),str2double(line2{2})];
+end
+

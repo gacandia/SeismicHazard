@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig]=AtkinsonBoore2003(To,M,rrup,h,mechanism,media,region)
+function[lny,sigma,tau,phi]=AtkinsonBoore2003(To,M,rrup,h,mechanism,media,region)
 
 % Atkinson & Boore (2003)
 % To        = spectral period
@@ -9,14 +9,12 @@ function[lny,sigma,tau,sig]=AtkinsonBoore2003(To,M,rrup,h,mechanism,media,region
 % media     = 'soil','rock'
 % region    = 'general','cascadia','japan'
 
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if  To<0 || To> 1/0.33
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -27,21 +25,31 @@ T_hi    = min(period(period>=To));
 index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
-    [lny,sigma,tau,sig] = gmpe(index,M,rrup,h,mechanism,media,region);
+    [log10y,sigma,tau,phi] = gmpe(index,M,rrup,h,mechanism,media,region);
 else
-    [lny_lo,sigma_lo,tau_lo] = gmpe(index,  M,rrup,h,mechanism,media,region);
-    [lny_hi,sigma_hi,tau_hi] = gmpe(index+1,M,rrup,h,mechanism,media,region);
+    [log10y_lo,sigma_lo,tau_lo] = gmpe(index,  M,rrup,h,mechanism,media,region);
+    [log10y_hi,sigma_hi,tau_hi] = gmpe(index+1,M,rrup,h,mechanism,media,region);
     x          = log([T_lo;T_hi]);
-    Y_sa       = [lny_lo,lny_hi]';
+    Y_sa       = [log10y_lo,log10y_hi]';
     Y_sigma    = [sigma_lo,sigma_hi]';
     Y_tau      = [tau_lo,tau_hi]';
-    lny        = interp1(x,Y_sa,log(To))';
+    log10y     = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
     tau        = interp1(x,Y_tau,log(To))';
-    sig        = sqrt(sigma.^2-tau.^2);
+    phi        = sqrt(sigma.^2-tau.^2);
 end
 
-function[lny,sigma,tau,sig]=gmpe(index,M,rrup,h,mechanism,media,region)
+% log base change
+lny   = log10y * log(10);
+sigma = sigma  * log(10);
+tau   = tau    * log(10);
+phi   = phi    * log(10);
+
+% convert cm/s2 to g's
+lny    = lny - log(980.66);
+
+
+function[log10y,sigma,tau,phi]=gmpe(index,M,rrup,h,mechanism,media,region)
 
 %% PGAROCK, sl,SC,SD,SE
 period  = [0.01 0.04 0.1 0.2 0.4 1 2 1/0.33];
@@ -159,16 +167,13 @@ switch mechanism
     case 'intraslab', IND = and(M>=6.5,rrup<100);
 end
 C   = DATA(index,:);
-s1  = log(10)*C(9);
-s2  = log(10)*C(10);
-s22 = log(10)*C(11);
+s1  = C(9);
+s2  = C(10);
+s22 = C(11);
 sigma = M*0;
 sigma(~IND) = sqrt(s1^2 + s2^2);
 sigma( IND) = sqrt(s1^2 + s22^2);
 tau    = s1*ones(size(M));
-sig    = sqrt(sigma.^2-tau.^2);
-lny    = log(10)*(C(1)+C(2)*M + C(3)*h+ C(4)*R - g.*log10(R) + C(5)*sl*SC+C(6)*sl*SD+C(7)*sl*SE);
-
-% convert cm/s2 to g's
-lny    = lny-log(980.66);
+phi    = sqrt(sigma.^2-tau.^2);
+log10y = C(1)+C(2)*M + C(3)*h+ C(4)*R - g.*log10(R) + C(5)*sl*SC+C(6)*sl*SD+C(7)*sl*SE;
 

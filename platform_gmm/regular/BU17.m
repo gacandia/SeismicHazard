@@ -1,24 +1,22 @@
 function [lnY,sigma,tau,phi] = BU17(To,Mw, Rrup, H,environment,mechanism)
 
-% % Bullock, Z., Dashti, S., Liel, A., Porter, K., Karimi, Z., & Bradley, B. (2017).
-% % Ground?motion prediction equations for Arias intensity, cumulative absolute
-% % velocity, and peak incremental ground velocity for rock sites in different
-% % tectonic environments.
-% % Bulletin of the Seismological Society of America, 107(5), 2293-2309.
-% % https://doi.org/10.1785/0120160388
-%
+% Bullock, Z., Dashti, S., Liel, A., Porter, K., Karimi, Z., & Bradley, B. (2017).
+% Ground?motion prediction equations for Arias intensity, cumulative absolute
+% velocity, and peak incremental ground velocity for rock sites in different
+% tectonic environments.
+% Bulletin of the Seismological Society of America, 107(5), 2293-2309.
+% https://doi.org/10.1785/0120160388
 
-% To=-4   CAV
-% To=-4.1 CAV5
-% To=-4.2 CAVSTD
+% To=-4   CAV, CAVt5 or CAVSTD
 % To=-5   AI
 % To=-6   VGI
 
-if ~ismember(To,[-4 -4.1 -4.2 -5 -6])
-    lnY   = nan(size(Mw));
-    sigma = nan(size(Mw));
-    tau   = nan(size(Mw));
-    phi   = nan(size(Mw));
+lnY   = nan(size(Mw));
+sigma = nan(size(Mw));
+tau   = nan(size(Mw));
+phi   = nan(size(Mw));
+
+if ~ismember(To,[-4 -5 -6])
     return
 end
 

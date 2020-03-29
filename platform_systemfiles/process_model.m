@@ -12,8 +12,8 @@ RUPT      = sys.RUPT;
 GMPELIB   = sys.GMPELIB;
 msampling = opt.MagDiscrete;
 
-isordered  = isequal({sys.GEOM.source.label},{sys.MSCL.seismicity.source},{sys.RUPT.id});
-
+% isordered  = isequal({sys.GEOM.source.label},{sys.MSCL.seismicity.source},{sys.RUPT.id});
+isordered  = isequal({sys.GEOM.source.label},{sys.MSCL(1).seismicity.source},{sys.RUPT.id});
 
 %% PROCESS GEOMETRY
 tt=cputime;
@@ -69,7 +69,7 @@ for i=1:Ngeom
                         GEOM(i).source(j).geom = geom;
                     else
                         z=load(source.datasource);
-                        z=z.geom(j);
+                        z=z.geom(source.datasourceindx);
                         [p,pmean,rot] = rotateplane(z.vertices,ellipsoid);
                         geom.p       = p;
                         geom.pmean   = pmean;

@@ -5,12 +5,12 @@ Boundary     : CHL_adm1.shp
 Layer        :
 ShearModulus : 3e11      #dyne/cm2
 IM           : PGA
-im           : logsp(0.01,3,20)
+im           : logsp(0.001,2,20)
 MaxDistance  : 500
-MagDiscrete  : gauss 10
+MagDiscrete  : gauss 12
 CGMM         : shuffle MC 500
 IM1          : 0.01
-IM2          : 0.1 0.2 0.5 1 2
+IM2          : 0.1
 Spatial      : @none_spatial
 Spectral     : @none_spectral
 LiteMode     : off
@@ -18,7 +18,7 @@ Clusters     : off 100 1
 
 Option 1 - Logic Tree Weights
 Geom Weight : 1
-Gmpe Weight : 1/5 1/5 1/5 1/5 1/5
+Gmpe Weight : 0.10 0.10 0.20 0.3 0.30
 Mscl Weight : 1 
 
 Option 2 - Source Geometry
@@ -32,23 +32,23 @@ zone6 type area mechanism intraslab gmpe 2 vertices Poulos_SeismicHazard.mat 6
 zone7 type area mechanism intraslab gmpe 2 vertices Poulos_SeismicHazard.mat 7
 
 Option 3 - GMPE Library
-at1  handle Youngs1997 mechanism interface
-at2  handle Youngs1997 mechanism intraslab
-at3  handle AtkinsonBoore2003 mechanism interface region General
-at4  handle AtkinsonBoore2003 mechanism intraslab region General
-at5  handle Zhao2006 mechanism interface
-at6  handle Zhao2006 mechanism intraslab
-at7  handle BCHydro2012 mechanism interface region Forearc DeltaC1 Central
-at8  handle BCHydro2012 mechanism intraslab region Forearc DeltaC1 Central
-at9  handle MontalvaBastias2017 mechanism interface region Forearc
-at10 handle MontalvaBastias2017 mechanism intraslab region Forearc
+at1  handle Youngs1997 mechanism interface                                 sigma truncate 3
+at2  handle Youngs1997 mechanism intraslab                                 sigma truncate 3
+at3  handle Zhao2006 mechanism interface                                   sigma truncate 3
+at4  handle Zhao2006 mechanism intraslab                                   sigma truncate 3
+at5  handle BCHydro2012 mechanism interface region Forearc DeltaC1 Central sigma truncate 3
+at6  handle BCHydro2012 mechanism intraslab region Forearc DeltaC1 Central sigma truncate 3
+at7  handle MontalvaBastias2017 mechanism interface region Forearc         sigma truncate 3
+at8  handle MontalvaBastias2017 mechanism intraslab region Forearc         sigma truncate 3
+at9  handle Idini2016 mechanism interface spectrum sI                      sigma truncate 3
+at10 handle Idini2016 mechanism intraslab spectrum sI                      sigma truncate 3
 
 Option 4 - GMPE GROUPS
-Youngs 1997      pointers 1   2   
-AB 2003          pointers 3   4 
-Zhao 2006        pointers 5   6 
-Abrahamson 2012  pointers 7   8 
-Montalva 2017    pointers 9   10
+Youngs 1997      pointers 1   2  
+Zhao 2006        pointers 3   4  
+Abrahamson 2012  pointers 5   6  
+Montalva 2017    pointers 7   8  
+Idini 2016       pointers 9   10 
 
 Option 5 - MAGNITUDE SCALING RELATIONS
 seismicity 1 Poulos
@@ -61,14 +61,15 @@ zone6 handle truncexp NMmin  3.7154 bvalue 1.1100 Mmin 5 Mmax 8.4
 zone7 handle truncexp NMmin  2.6303 bvalue 0.9800 Mmin 5 Mmax 8.5  
 
 Option 6 - RUPTURE AREA
-zone1 type circular spacing 90 nref 1 RA custom 1 4 0 taper false 
-zone2 type circular spacing 90 nref 1 RA custom 1 4 0 taper false 
-zone3 type circular spacing 90 nref 1 RA custom 1 4 0 taper false 
-zone4 type circular spacing 90 nref 1 RA custom 1 4 0 taper false 
-zone5 type circular spacing 90 nref 1 RA custom 1 4 0 taper false 
-zone6 type circular spacing 90 nref 1 RA custom 1 4 0 taper false 
-zone7 type circular spacing 90 nref 1 RA custom 1 4 0 taper false 
+zone1 type circular spacing 40 nref 1 RA custom 1 4 0 taper false 
+zone2 type circular spacing 40 nref 1 RA custom 1 4 0 taper false 
+zone3 type circular spacing 40 nref 1 RA custom 1 4 0 taper false 
+zone4 type circular spacing 40 nref 1 RA custom 1 4 0 taper false 
+zone5 type circular spacing 40 nref 1 RA custom 1 4 0 taper false 
+zone6 type circular spacing 40 nref 1 RA custom 1 4 0 taper false 
+zone7 type circular spacing 40 nref 1 RA custom 1 4 0 taper false 
 
 Option 7 - Pre defined sites
-source 760
-LasCondes  -33.4124 -70.5635 691.3
+source 760                                 
+Viaducto1  -22.458785 -68.862041 0 Vs30 500
+Viaducto2  -22.458785 -68.862041 0 Vs30 829

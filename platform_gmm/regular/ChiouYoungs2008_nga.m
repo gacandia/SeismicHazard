@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig] = ChiouYoungs2008_nga(To,M, rrup, rjb, rx, ztor, dip, Z10, mechanism, event, Vs30, Vs30type)
+function[lny,sigma,tau,phi] = ChiouYoungs2008_nga(To,M, rrup, rjb, rx, ztor, dip, Z10, mechanism, event, Vs30, Vs30type)
 
 % BrianS-J. Chiou and Robert R. Youngs (2008) An NGA Model for the 
 % Average Horizontal Component of Peak Ground Motion and Response Spectra.
@@ -17,14 +17,12 @@ function[lny,sigma,tau,sig] = ChiouYoungs2008_nga(To,M, rrup, rjb, rx, ztor, dip
 % Vs30       = Shear wave velocity averaged over the upper 30 m
 % Vs30type   = 'measured','inferred'
 
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if  and(To<0 || To> 10,To~=-1)
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -37,8 +35,8 @@ T_hi    = min(period(period>=To));
 index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
-    [lny,sigma,sig] = gmpe(index,M,rrup, rjb, rx, ztor, dip, Z10, mechanism, event, Vs30, Vs30type);
-    tau              = sqrt(sigma.^2-sig.^2);
+    [lny,sigma,phi] = gmpe(index,M,rrup, rjb, rx, ztor, dip, Z10, mechanism, event, Vs30, Vs30type);
+    tau              = sqrt(sigma.^2-phi.^2);
 else
     [lny_lo,sigma_lo,sig_lo] = gmpe(index,  M,rrup, rjb, rx, ztor, dip, Z10, mechanism, event, Vs30, Vs30type);
     [lny_hi,sigma_hi,sig_hi] = gmpe(index+1,M,rrup, rjb, rx, ztor, dip, Z10, mechanism, event, Vs30, Vs30type);
@@ -48,8 +46,8 @@ else
     Y_sig      = [sig_lo,sig_hi]';
     lny        = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
-    sig        = interp1(x,Y_sig,log(To))';
-    tau        = sqrt(sigma.^2-sig.^2);
+    phi        = interp1(x,Y_sig,log(To))';
+    tau        = sqrt(sigma.^2-phi.^2);
 end
 
 function[lnSa,sigma,sig]=gmpe(index,M,rrup, rjb, rx, ztor, dip, Z10, mechanism, event, Vs30, Vs30type)

@@ -1,16 +1,16 @@
-function [lnSa, sigma] = Campbell1997h(T,M, R, media, mechanism, D, sig)
+function [lny, sigma,tau,phi] = Campbell1997h(T,M, R, media, mechanism, D, sig)
 
 % Campbell, K. W. (1997). Empirical near-source attenuation relationships
 % for horizontal and vertical components of peak ground acceleration, peak
 % ground velocity, and pseudo-absolute acceleration response spectra. 
 % Seismological research letters, 68(1), 154-179.
 
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if T<0.05 || T> 4
-    lnSa  = nan(size(M));
-    sigma = nan(size(M));
-    %IM    = IM2str(T);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -32,7 +32,6 @@ switch sig
     case 'average'  , arb =0;
 end
 
-
 % convert soil parameter
 S_SR = 0;
 S_HR = 0;
@@ -50,7 +49,7 @@ end
 
 % compute Sa (Equation 8)
 [depth_term] = f_SA(D, c6, S_HR, S_SR);
-lnSa = log(Ah) + c1 + c2*tanh(c3*(M-4.7)) + (c4+c5*M).*R + 0.5*c6*S_SR + c6*S_HR + c7*tanh(c8*D)*(1-S_HR) + depth_term;
+lny = log(Ah) + c1 + c2*tanh(c3*(M-4.7)) + (c4+c5*M).*R + 0.5*c6*S_SR + c6*S_HR + c7*tanh(c8*D)*(1-S_HR) + depth_term;
 
 % dispersion for geometric mean (Equation 10)
 sigma = sqrt(sigma_lnAH.^2 + 0.27^2);

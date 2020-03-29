@@ -26,6 +26,9 @@ for k=site_selection
         ind_s    = sptr(i);
         source_i = mGMPEVs30(source(i),Vs30k);
         MRE(k,:,:,ind_s)=runsource(source_i,xyzk,IM,im,ellipsoid);
+        if mod(i,100)==0
+            fprintf('%g de %g\n',i,Nsource_k)
+        end
     end
 end
 

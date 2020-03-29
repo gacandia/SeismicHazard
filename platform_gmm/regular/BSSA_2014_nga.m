@@ -1,18 +1,15 @@
-function [lny, sigma,tau,sig] = BSSA_2014_nga(To,M, rjb, mechanism, reg, BasinDepth, Vs30)
+function [lny, sigma,tau,phi] = BSSA_2014_nga(To,M, rjb, mechanism, reg, BasinDepth, Vs30)
 
 % David M. Boore, Jonathan P. Stewart, Emel Seyhan, and Gail M.
 % Atkinson (2014) NGA-West2 Equations for Predicting PGA, PGV, and 5
 % Damped PSA for Shallow Crustal Earthquakes. Earthquake Spectra:
 % August 2014, Vol. 30, No. 3, pp. 1057-1085.
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
 
 if  and(To<0 || To> 10,To~=-1)
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -26,7 +23,7 @@ index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
     [lny,sigma,tau] = gmpe(index,M, rjb, mechanism, reg, BasinDepth, Vs30);
-    sig             = sqrt(sigma.^2-tau.^2);
+    phi             = sqrt(sigma.^2-tau.^2);
 else
     [lny_lo,sigma_lo,tau_lo] = gmpe(index,  M, rjb, mechanism, reg, BasinDepth, Vs30);
     [lny_hi,sigma_hi,tau_hi] = gmpe(index+1,M, rjb, mechanism, reg, BasinDepth, Vs30);
@@ -37,7 +34,7 @@ else
     lny        = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
     tau        = interp1(x,Y_tau,log(To))';
-    sig        = sqrt(sigma.^2-tau.^2);
+    phi        = sqrt(sigma.^2-tau.^2);
 end
 
 function[lny,sigma,tau]=gmpe(index,M, rjb, mechanism, reg, z1, Vs30)

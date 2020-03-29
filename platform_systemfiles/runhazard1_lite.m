@@ -19,13 +19,16 @@ ind       = (sum(ind,1)>0);
 source    = model.source(ind==1);
 Nsource_k = length(source);
 
-parfor k=1:Nsite
+for k=1:Nsite
     xyzk       = xyz(k,:);
     Vs30k      = Vs30(k);
     MRE_inds   = zeros(Nim,NIM);
     for i=1:Nsource_k
-        source_i = mGMPEVs30(source(i),Vs30k); %#ok<PFBNS>
+        source_i = mGMPEVs30(source(i),Vs30k);
         MRE_inds = MRE_inds+runsource(source_i,xyzk,IM,im,ellipsoid);
+        if mod(i,100)==0
+            fprintf('%g de %g\n',i,Nsource_k)
+        end
     end
     MRE(k,:,:)=MRE_inds;
 end

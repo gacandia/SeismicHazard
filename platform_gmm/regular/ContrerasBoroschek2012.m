@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig]=ContrerasBoroschek2012(To,M,rrup,h,media)
+function[lny,sigma,tau,phi]=ContrerasBoroschek2012(To,M,rrup,h,media)
 
 % Boroschek, R., & Contreras, V. (2012). Strong ground motion from the 
 % 2010 Mw 8.8 Maule Chile earthquake and attenuation relations for Chilean
@@ -12,14 +12,12 @@ function[lny,sigma,tau,sig]=ContrerasBoroschek2012(To,M,rrup,h,media)
 % h         = focal depth (km)
 % media     = 'rock','soil'
 
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if  To<0 || To> 2
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -30,21 +28,23 @@ T_hi    = min(period(period>=To));
 index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
-    [lny,sigma] = gmpe(index,M,rrup,h,media);
+    [log10y,sigma] = gmpe(index,M,rrup,h,media);
 else
-    [lny_lo,sigma_lo] = gmpe(index,  M,rrup,h,media);
-    [lny_hi,sigma_hi] = gmpe(index+1,M,rrup,h,media);
+    [log10y_lo,sigma_lo] = gmpe(index,  M,rrup,h,media);
+    [log10y_hi,sigma_hi] = gmpe(index+1,M,rrup,h,media);
     x          = log([T_lo;T_hi]);
-    Y_sa       = [lny_lo,lny_hi]';
+    Y_sa       = [log10y_lo,log10y_hi]';
     Y_sigma    = [sigma_lo,sigma_hi]';
-    lny        = interp1(x,Y_sa,log(To))';
+    log10y        = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
 end
 
-tau=0*sigma;
-sig=sigma;
+% log base conversion
+lny   = log10y * log(10);
+sigma = sigma  * log(10);
 
-function[lny,sigma]=gmpe(index,M,rrup,h,media)
+
+function[log10y,sigma]=gmpe(index,M,rrup,h,media)
 
 switch media
     case 'rock', Z=0;
@@ -69,11 +69,10 @@ DATA = [-1.8559 0.2549 0.0111 -0.0013 0.3061 0.0734 0.3552 1.5149 -0.103 0.2137
     -3.7061 0.4096 0.0225 -0.0010 0.2555 0.0734 0.3552 1.5149 -0.103 0.2425
     -3.7750 0.4089 0.0228 -0.0010 0.2528 0.0734 0.3552 1.5149 -0.103 0.2459
     -3.9051 0.4079 0.0215 -0.0008 0.2057 0.0734 0.3552 1.5149 -0.103 0.2592];
-
+    
 C       = DATA(index,:);
 delta   = C(6)*10.^(C(7)*M);
 g       = C(8)+C(9)*M;
 R       = sqrt(rrup.^2+delta.^2);
-lny     = log(10)*(C(1)+C(2)*M+C(3)*h+C(4)*R-g.*log10(R)+C(5)*Z);
-sigma   = log(10)*C(6);
-        
+log10y  = C(1)+C(2)*M+C(3)*h+C(4)*R-g.*log10(R)+C(5)*Z;
+sigma   = C(10);

@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig]=Jaimes2015(To,M,rrup,station)
+function[lny,sigma,tau,phi]=Jaimes2015(To,M,rrup,station)
 %
 % Jaimes M.A., Ramirez-Gaytán A. & Reinoso E (2015).Ground-Motion Prediction Model From Intermediate-Depth
 % Intraslab Earthquakes at the Hill and Lake-Bed Zones of Mexico City. Journal of Earthquake Engineering,
@@ -10,15 +10,12 @@ function[lny,sigma,tau,sig]=Jaimes2015(To,M,rrup,station)
 % h         = focal depth (km)
 % mechanism ='intraslab'
 % media     = 'rock' for specifically Mexico City
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
 
 if  and(To<0 || To> 5,To~=-1)
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -42,8 +39,15 @@ else
     sigma      = interp1(x,Y_sigma,log(To))';
 end
 
-tau=0*sigma;
-sig=sigma;
+% convert PGV from cm/s2 to m/s
+if To==-1
+    lny    = lny-log(100);
+end
+% convert Sa cm/s2 to g
+if To>=0
+    lny    = lny-log(980.66);
+end
+
 
 function [lny,sigma]=gmpe(index,M,rrup,station)
 
@@ -137,8 +141,3 @@ end
 C       = DATA(index,:);
 lny     = C(1)+ C(2)*M + C(3)*log(rrup) + C(4)*rrup;
 sigma   = C(5)*ones(size(M));
-
-% convert cm/s2 to g's, and keeps cm/s for PGV
-if index~=1
-    lny    = lny-log(980.66);
-end

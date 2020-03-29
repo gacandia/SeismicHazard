@@ -1,9 +1,9 @@
-%function[style]=rake2style(rake,gmm)
-clc
-clearvars
+function[style]=rake2style(rake,gmm)
+% clc
+% clearvars
 % rake = -90; %normal
 % rake = 90; %reverse
-rake=180; %strike slip
+% rake=180; %strike slip
 
 % style of faulting from rake angle
 % positive rake

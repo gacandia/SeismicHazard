@@ -7,12 +7,12 @@ function[lny,sigma,tau,phi] = SiberRisk2019(To,M,R,h,mechanism,Vs30)
 % mechanism = 'interface' 'intraslab'
 % region    = 'forearc','backarc','unkown'
 % Vs30      = Shear wave velocity averaged over the upper 30 m
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
 
 if  and(To<0 || To> 10,To~=-1)
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    phi   = nan(size(M));
     return
 end
 
@@ -45,8 +45,6 @@ end
 if index==1
     lny = lny+log(100);
 end
-
-
 
 function [lny,sigma,tau,phi] = gmpe(index,M,R,h,mechanism,Vs30)
 

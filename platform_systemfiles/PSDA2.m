@@ -265,7 +265,6 @@ handles.FIGpsda.Name      = 'Probabilistic Slope Displacement Analysis - PSDA';
 handles.tableREG.Data     = cell(0,4);
 handles.tableCDM.Data     = cell(0,7);
 delete(findall(handles.ax1,'type','line'))
-handles.kdesign.Enable    = 'off';
 handles.runMRDeagg.Enable = 'off';
 handles.ref1.Visible      = 'off';
 
@@ -522,19 +521,32 @@ L.Box      ='off';
 
 function kdesign_Callback(hObject, eventdata, handles)
 if isempty(handles.haz)
-    return
-end
-prompt   = {'Return period (yr):','Allowable displacement Da(cm):'};
-dlgtitle = 'k-design';
-dims     = [1 50];
-definput = {'475','20'};
-answer   = inputdlg(prompt,dlgtitle,dims,definput);
-if isempty(answer)
-    return
+    if ~isempty(handles.model)
+        handles.haz = haz_PSDA(handles);
+        if strcmp(handles.AnalysisType,'PBPA')
+            handles.haz = FP2PH(handles);
+        end
+        handles     = runPSDA_regular(handles);
+        handles.deleteButton.CData  = handles.CDataClosed;
+    end
 end
 
-Tr        = str2double(answer{1});
-Da        = str2double(answer{2});
+if isfield(handles,'SPCData')
+    Tr = handles.SPCData(1);
+    Da = handles.SPCData(2);
+else
+    prompt   = {'Return period (yr):','Allowable displacement Da(cm):'};
+    dlgtitle = 'k-design';
+    dims     = [1 50];
+    definput = {'475','20'};
+    answer   = inputdlg(prompt,dlgtitle,dims,definput);
+    if isempty(answer)
+        return
+    end
+    Tr        = str2double(answer{1});
+    Da        = str2double(answer{2});
+end
+
 tit       = sprintf('k-design: Tr = %g, Da = %g cm',Tr,Da);
 Nbranches = size(handles.IJK,1);
 kydata(1:Nbranches,1) = struct('d',[],'lambdaD',[],'ky',[],'error',[],'iter',[]);
@@ -543,7 +555,6 @@ model     = cell(Nbranches,1);
 delete(findall(handles.FIGpsda,'type','legend'))
 delete(findall(handles.ax1,'type','line'));drawnow
 XL = handles.paramPSDA.d([1 end]); plot(handles.ax1,XL,1/Tr*[1 1],'k--','tag','kdesign','handlevisibility','off')
-YL = handles.ax1.YLim;   plot(handles.ax1,Da*[1 1],YL,'k--','tag','kdesign','handlevisibility','off')
 drawnow
 handles.ax1.ColorOrderIndex=1;
 home
@@ -580,6 +591,7 @@ uimenu(c,'Label','Create Histogram'  ,'Callback',{@data2hist_uimenu,vertcat(kyda
 uimenu(c,'Label','Copy data'         ,'Callback',{@data2clipboard_uimenu,data});
 uimenu(c,'Label','Undock'            ,'Callback',{@figure2clipboard_uimenu,handles.ax1,tit});
 set(handles.ax1,'uicontextmenu',c);
+YL = handles.ax1.YLim; plot(handles.ax1,Da*[1 1],YL,'k--','tag','kdesign','handlevisibility','off')
 format(cF);
 
 function data2table_uimenu(~, ~,model,k)

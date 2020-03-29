@@ -1,16 +1,16 @@
-function [lny,sigma,tau,sig] = KM06(T,Mw,Rrup,mechanism)
+function [lny,sigma,tau,phi] = KM06(T,Mw,Rrup,mechanism)
 
 % Steven L. Kramer and Robert A. Mitchell (2006) Ground Motion Intensity 
 % Measures for Liquefaction Hazard Evaluation. Earthquake Spectra: 
 % May 2006, Vol. 22, No. 2, pp. 413-438.
 % DOI: https://doi.org/10.1193/1.2194970
 
+lny   = nan(size(Mw));
+sigma = nan(size(Mw));
+tau   = nan(size(Mw));
+phi   = nan(size(Mw));
 
 if T~=-4.1 % CAV5
-    lny   = nan(size(Mw));
-    sigma = nan(size(Mw));
-    tau   = nan(size(Mw));
-    sig   = nan(size(Mw));
     return
 end
 
@@ -38,7 +38,5 @@ end
 
 lny   = c1 + c2*(Mw-6) + c3*log(Mw/6) + c4*log(sqrt(Rrup.^2+h.^2)) + f1*FN + f2*FR;
 sigma = 0.708;
-tau   = nan;
-sig   = nan;
 
 

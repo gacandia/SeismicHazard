@@ -30,7 +30,7 @@ fprintf('-----------------------------------------------------------------------
 MRE     = ones (Nsites,Nim,NIM);
 MREPCE  = ones (Nsites,Nim,NIM);
 
-parfor i=isREGULAR
+for i=isREGULAR
     ti=tic;
     ID1=model(i).id1; if length(ID1)>27,ID1=[ID1(1:27),'...'];end
     ID2=model(i).id2; if length(ID2)>27,ID2=[ID2(1:27),'...'];end
@@ -42,7 +42,7 @@ parfor i=isREGULAR
     end
 end
 
-parfor i=isPCE
+for i=isPCE
     ti=tic;
     ID1=model(i).id1; if length(ID1)>27,ID1=[ID1(1:27),'...'];end
     ID2=model(i).id2; if length(ID2)>27,ID2=[ID2(1:27),'...'];end

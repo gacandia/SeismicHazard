@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig]=Zhao2006(To,M,rrup,h,mechanism,Vs30)
+function[lny,sigma,tau,phi]=Zhao2006(To,M,rrup,h,mechanism,Vs30)
 
 % Zhao, J. X., Zhang, J., Asano, A., Ohno, Y., Oouchi, T.,
 % Takahashi, T., ... & Fukushima, Y. (2006). Attenuation relations
@@ -13,14 +13,12 @@ function[lny,sigma,tau,sig]=Zhao2006(To,M,rrup,h,mechanism,Vs30)
 % mechanism = 'interface','intraslab'
 % Vs30      = Shear wave velocity averaged over the upper 30 m
 
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if  To<0 || To> 5
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -31,7 +29,7 @@ T_hi    = min(period(period>=To));
 index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
-    [lny,sigma,tau,sig] = gmpe(index,M,rrup,h,mechanism,Vs30);
+    [lny,sigma,tau,phi] = gmpe(index,M,rrup,h,mechanism,Vs30);
 else
     [lny_lo,sigma_lo,tau_lo] = gmpe(index,  M,rrup,h,mechanism,Vs30);
     [lny_hi,sigma_hi,tau_hi] = gmpe(index+1,M,rrup,h,mechanism,Vs30);
@@ -42,8 +40,11 @@ else
     lny        = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
     tau        = interp1(x,Y_tau,log(To))';
-    sig        = sqrt(sigma.^2-tau.^2);
+    phi        = sqrt(sigma.^2-tau.^2);
 end
+
+% convert cm/s2 to g's
+lny    = lny-log(980.66);
 
 
 function[lny,sigma,tau,sig]=gmpe(index,M,rrup,h,mechanism,Vs30)
@@ -146,7 +147,3 @@ lny   = a*M+b*rrup-log(r)+e*(h-hc).*deltah + SR + SI + SS + SSL*log(rrup) + Ck;
 sig   = Coeff2(6)*ones(size(M));
 tau   = Coeff2(7)*ones(size(M));
 sigma = sqrt(sig.^2+tau.^2);
-
-% convert cm/s2 to g's
-lny    = lny-log(980.66);
-

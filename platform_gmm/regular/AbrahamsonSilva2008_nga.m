@@ -1,13 +1,11 @@
-function[lny,sigma,tau,sig] = AbrahamsonSilva2008_nga(T, M, Rrup, Rjb, Rx, Ztor, dip,W, Z10, Vs30,mechanism, event, Vs30type)
+function[lny,sigma,tau,phi] = AbrahamsonSilva2008_nga(T, M, Rrup, Rjb, Rx, Ztor, dip,W, Z10, Vs30,mechanism, event, Vs30type)
+
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
 
 if  and(T<0 || T> 10,T~=-1)
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(T);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -38,7 +36,7 @@ end
 %% Compute AS
 Td         = min(10.^( -1.25 + 0.3*M ),10);
 [SaTd,~    ,pga_rock,pga_sigmaB,pga_tauB] = AS_2008_nga_parallel(M, 1100, Td    , Rrup, Rjb, Rx, dip, Ztor, 0  , W, FRV, FNM, FAS, FHW, FVS30, 0*M ,1);
-[Sa  ,sigma,~,~,~,tau,sig]= AS_2008_nga_parallel(M, Vs30, T*(M.^0), Rrup, Rjb, Rx, dip, Ztor, Z10, W, FRV, FNM, FAS, FHW, FVS30, SaTd,0,pga_rock,pga_sigmaB,pga_tauB);
+[Sa  ,sigma,~,~,~,tau,phi]= AS_2008_nga_parallel(M, Vs30, T*(M.^0), Rrup, Rjb, Rx, dip, Ztor, Z10, W, FRV, FNM, FAS, FHW, FVS30, SaTd,0,pga_rock,pga_sigmaB,pga_tauB);
 lny = log(Sa);
 
 function [Sa,sigma,pga_rock,pga_sigmaB,pga_tauB,tau,sig] = AS_2008_nga_parallel(M, Vs30, T, Rrup, Rjb, Rx, dip, Ztor, Z10, W, FRV, FNM, FAS, FHW, FVS30, SaTd,irock,pga_rock,pga_sigmaB,pga_tauB)

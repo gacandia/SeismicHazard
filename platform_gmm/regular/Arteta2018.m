@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig]=Arteta2018(To,M,Rhyp,media,region)
+function[lny,sigma,tau,phi]=Arteta2018(To,M,Rhyp,media,region)
 
 % Ground Motion Prediction Equation for Deep Subduction Earthquakes in Colombia
 % Carlos A. Arteta, Cesar A. Pajaro, Carlos Lozano, Anibal E.
@@ -8,15 +8,12 @@ function[lny,sigma,tau,sig]=Arteta2018(To,M,Rhyp,media,region)
 % M         = moment magnitude
 % rhyp      = closest distance to rupture plane
 % mechanism = 'interface' 'intraslab'
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
 
 if  To<0 || To> 10
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -27,7 +24,7 @@ T_hi    = min(period(period>=To));
 index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
-    [lny,sigma,tau,sig] = gmpe(index,M,Rhyp,media,region);
+    [lny,sigma,tau,phi] = gmpe(index,M,Rhyp,media,region);
 else
     [lny_lo,sigma_lo,tau_lo] = gmpe(index,  M,Rhyp,media,region);
     [lny_hi,sigma_hi,tau_hi] = gmpe(index+1,M,Rhyp,media,region);
@@ -38,7 +35,7 @@ else
     lny        = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
     tau        = interp1(x,Y_tau,log(To))';
-    sig        = sqrt(sigma.^2-tau.^2);
+    phi        = sqrt(sigma.^2-tau.^2);
 end
 
 function[lnSa,sigma,tau,phi]=gmpe(index,M,Rhyp,media,region)

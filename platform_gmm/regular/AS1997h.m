@@ -1,17 +1,15 @@
-function[lny,sigma,tau,sig] = AS1997h(To,M, rrup, media, mechanism, location, sig)
+function[lny,sigma,tau,phi] = AS1997h(To,M, rrup, media, mechanism, location, sigmatype)
 
 % Abrahamson, N. A., & Silva, W. J. (1997). Empirical response 
 % spectral attenuation relations for shallow crustal earthquakes. 
 % Seismological research letters, 68(1), 94-127.
 
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if To<0 || To> 5
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -24,19 +22,16 @@ T_hi    = min(period(period>=To));
 index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
-    [lny,sigma] = gmpe(index,M, rrup, media, mechanism, location, sig);
+    [lny,sigma] = gmpe(index,M, rrup, media, mechanism, location, sigmatype);
 else
-    [lny_lo,sigma_lo] = gmpe(index,  M, rrup, media, mechanism, location, sig);
-    [lny_hi,sigma_hi] = gmpe(index+1,M, rrup, media, mechanism, location, sig);
+    [lny_lo,sigma_lo] = gmpe(index,  M, rrup, media, mechanism, location, sigmatype);
+    [lny_hi,sigma_hi] = gmpe(index+1,M, rrup, media, mechanism, location, sigmatype);
     x          = log([T_lo;T_hi]);
     Y_sa       = [lny_lo,lny_hi]';
     Y_sigma    = [sigma_lo,sigma_hi]';
     lny        = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
 end
-
-tau = sigma*0;
-sig = sigma;
 
 function[lny,sigma]=gmpe(index,M, rrup, media, mechanism, location, sig)
 
@@ -48,7 +43,7 @@ end
 switch mechanism
     case 'reverse'         , F=1;
     case 'reverse/oblique' , F=0.5;
-    otherwise %'strike-slip','normal','normal-oblique','thrust'
+    otherwise
         F=0;
 end
 
@@ -115,8 +110,6 @@ f4 = f_HW_M.*f_HW_R;
 function [f5] = f5(pga_rock, V)
 % value of f_5
 f5 = V.a10 + V.a11 * log(pga_rock + V.c5);
-
-
 
 function [contants] = get_abrahamson_silva_constants(index)
 

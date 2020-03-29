@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig]=GarciaJaimes2017(To,M,rrup,component)
+function[lny,sigma,tau,phi]=GarciaJaimes2017(To,M,rrup,component)
 
 % García-Soto & Jaimes (2017). Ground-Motion Prediction Model for Vertical
 % Response Spectra from Mexican Interplate Earthquakes. Bulletin of the
@@ -11,14 +11,12 @@ function[lny,sigma,tau,sig]=GarciaJaimes2017(To,M,rrup,component)
 % mechanism ='interface'
 % media     = 'rock'
 
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if  and(To<0 || To> 5,To~=-1)
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 To      = max(To,0.001); %PGA is associated to To=0.01;
@@ -39,8 +37,14 @@ else
     sigma      = interp1(x,Y_sigma,log(To))';
 end
 
-tau=0*sigma;
-sig=sigma;
+% unit convertion
+if To == -1
+    lny = lny - log(100);
+end
+
+if To>=0 && ~strcmpi(component,'h/v')
+    lny = lny - log(980.66);
+end
 
 function [lny,sigma]=gmpe(index,M,rrup,component)
 
@@ -174,9 +178,4 @@ switch lower(component)
         C       = DATA(index,:);
         lny     = C(1)+ C(2)*M + C(3)*rrup;
         sigma   = C(4)*ones(size(M));        
-end
-
-
-if index~=1 && ~strcmpi(component,'h/v')
-    lny    = lny-log(980.66);
 end

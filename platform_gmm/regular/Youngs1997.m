@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig]=Youngs1997(To,M,rrup,h,mechanism,media)
+function[lny,sigma,tau,phi]=Youngs1997(To,M,rrup,h,mechanism,media)
 
 % Youngs, R. R., Chiou, S. J., Silva, W. J., & Humphrey, J. R. (1997).
 % Strong ground motion attenuation relationships for subduction zone
@@ -11,14 +11,12 @@ function[lny,sigma,tau,sig]=Youngs1997(To,M,rrup,h,mechanism,media)
 % mechanism ='interface', 'intraslab'
 % media     = 'soil', 'rock'
 
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if  To<0 || To> 4 || and(contains(media,'rock'),To>3)
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-%     IM    = IM2str(To);
-%     h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-%     uiwait(h);
     return
 end
 
@@ -43,10 +41,6 @@ else
     lny        = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
 end
-
-tau=0*sigma;
-sig=sigma;
-
 
 function[lny,sigma]=gmpe(index,M,rrup,h,mechanism,media)
 

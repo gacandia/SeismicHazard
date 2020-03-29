@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig]=Garcia2005(To,M,Rrup,Rhyp,H,direction)
+function[lny,sigma,tau,phi]=Garcia2005(To,M,Rrup,Rhyp,H,direction)
 
 % To        = spectral period
 % M         = moment magnitude
@@ -6,15 +6,12 @@ function[lny,sigma,tau,sig]=Garcia2005(To,M,Rrup,Rhyp,H,direction)
 % rhyp      = distance to hypocenter
 % H         = focal depth
 % mechanism = 'horizontal' or 'vertical'
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
 
 if  and(To<0 || To> 5,To~=-1)
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -28,21 +25,37 @@ T_hi    = min(period(period>=To));
 index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
-    [lny,sigma,tau,sig] = gmpe(index,M,Rrup,Rhyp,H,direction);
+    [log10y,sigma,tau,phi] = gmpe(index,M,Rrup,Rhyp,H,direction);
 else
-    [lny_lo,sigma_lo,tau_lo] = gmpe(index,  M,Rrup,Rhyp,H,direction);
-    [lny_hi,sigma_hi,tau_hi] = gmpe(index+1,M,Rrup,Rhyp,H,direction);
+    [log10y_lo,sigma_lo,tau_lo] = gmpe(index,  M,Rrup,Rhyp,H,direction);
+    [log10y_hi,sigma_hi,tau_hi] = gmpe(index+1,M,Rrup,Rhyp,H,direction);
     x          = log([T_lo;T_hi]);
-    Y_sa       = [lny_lo,lny_hi]';
+    Y_sa       = [log10y_lo,log10y_hi]';
     Y_sigma    = [sigma_lo,sigma_hi]';
     Y_tau      = [tau_lo,tau_hi]';
-    lny        = interp1(x,Y_sa,log(To))';
+    log10y        = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
     tau        = interp1(x,Y_tau,log(To))';
-    sig        = sqrt(sigma.^2-tau.^2);
+    phi        = sqrt(sigma.^2-tau.^2);
 end
 
-function[lnIM,sigma,tau,phi]=gmpe(index,M,Rrup,Rhyp,H,direction)
+% log base convertion
+lny   = log10y * log(10);
+sigma = sigma  * log(10);
+tau   = tau    * log(10);
+phi   = phi    * log(10);
+
+% convert cm/s2 to g's, and keeps cm/s for PGV
+if To==-1
+    lny    = lny - log(100);
+end
+
+if To>=0
+    lny    = lny - log(980.66);
+end
+
+
+function[log10y,sigma,tau,phi]=gmpe(index,M,Rrup,Rhyp,H,direction)
 
 switch direction
     case 'horizontal'
@@ -94,16 +107,9 @@ se = Coef(index,8);
 
 Rcld         = Rrup;
 Rcld(M<=6.5) = Rhyp(M<=6.5);
-Delta  = 0.00750*10.^(0.507*M);
-R      = sqrt(Rcld.^2+Delta.^2);
-lnIM   = (c1+c2*M+c3*R-c4*log10(R)+c5*H)*log(10); % log10 to ln
-
-% convert cm/s2 to g's, and keeps cm/s for PGV
-if index~=1
-    lnIM    = lnIM-log(980.66);
-end
-
-tau    = se*ones(size(M));
-phi    = sr*ones(size(M));
-sigma  = sqrt(tau.^2+phi.^2);
-
+Delta        = 0.00750*10.^(0.507*M);
+R            = sqrt(Rcld.^2+Delta.^2);
+log10y       = c1+c2*M+c3*R-c4*log10(R)+c5*H;
+tau          = se*ones(size(M));
+phi          = sr*ones(size(M));
+sigma        = sqrt(tau.^2+phi.^2);

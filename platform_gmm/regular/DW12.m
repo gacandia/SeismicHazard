@@ -5,11 +5,12 @@ function [lny,sigma,tau,phi] = DW12(T,Mw,Rrup,mechanism, media)
 % Earthquake Engng Struct. Dyn., 42: 1189-1202. 
 % DOI: https://doi.org/10.1002/eqe.2266
 
+lny   = nan(size(Mw));
+sigma = nan(size(Mw));
+tau   = nan(size(Mw));
+phi   = nan(size(Mw));
+
 if T~=-4
-    lny   = nan(size(Mw));
-    sigma = nan(size(Mw));
-    tau   = nan(size(Mw));
-    phi   = nan(size(Mw));
     return
 end
 
@@ -54,7 +55,7 @@ tau = 0.247;
 phi = sqrt(sigma.^2-tau^2);
 
 % g-sec to m/s
-lny = lny - log(9.81);
+lny = lny + log(9.8066);
 
 
 

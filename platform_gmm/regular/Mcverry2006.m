@@ -1,32 +1,30 @@
-function [lny,sigma,tau,sig]=Mcverry2006(To,M,Rrup,Hc,mechanism,media,rvol)
+function [lny,sigma,tau,phi]=Mcverry2006(To,M,Rrup,Hc,mechanism,media,rvol)
 
 %McVerry GH, Zhao JX, Abrahamson NA, Somerville PG. New Zealand
 %Accelerations Response Spectrum Attenuation Relations for Crustal and
 %Subduction Zone Earthquakes.  Bulletin of the New Zealand Society of
 %Earthquake Engineering. Vol 39, No 4. March 2006
 
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if  and(To<0 || To> 3,To~=-1)
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
-
 
 if To>=0
     To      = max(To,0.001); %PGA is associated to To=0.01;
 end
+
 period  = [-1.0, 0.001, 0.075,      0.1,      0.2,      0.3,      0.4,      0.5,     0.75,      1.0,      1.5,      2.0,      3.0];
 T_lo    = max(period(period<=To));
 T_hi    = min(period(period>=To));
 index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
-    [lny,sigma,tau,sig] = gmpe(index,M,Rrup,Hc,mechanism,media,rvol);
+    [lny,sigma,tau,phi] = gmpe(index,M,Rrup,Hc,mechanism,media,rvol);
 else
     [lny_lo,sigma_lo,tau_lo] = gmpe(index,  M,Rrup,Hc,mechanism,media,rvol);
     [lny_hi,sigma_hi,tau_hi] = gmpe(index+1,M,Rrup,Hc,mechanism,media,rvol);
@@ -37,8 +35,9 @@ else
     lny        = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
     tau        = interp1(x,Y_tau,log(To))';
-    sig        = sqrt(sigma.^2-tau.^2);
+    phi        = sqrt(sigma.^2-tau.^2);
 end
+
 
 function[lny,sigma,tau,sig]=gmpe(index,M,R,Hc,mechanism,media,rvol)
 

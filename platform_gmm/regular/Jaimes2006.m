@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig]=Jaimes2006(To,M,rrup)
+function[lny,sigma,tau,phi]=Jaimes2006(To,M,rrup)
 
 % Jaimes, M.A., Reinoso, E. y Ordaz, M. (2006). Comparison of methods to predict response spectra
 % at instrumented sites given the magnitude and distance of an earthquake, Journal of Earthquake Engineering,
@@ -10,15 +10,12 @@ function[lny,sigma,tau,sig]=Jaimes2006(To,M,rrup)
 % h         = focal depth (km)
 % mechanism ='interface'
 % media     = 'rock' for specifically Mexico City
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
 
 if  To<0 || To> 6
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -40,8 +37,8 @@ else
     sigma      = interp1(x,Y_sigma,log(To))';
 end
 
-tau=0*sigma;
-sig=sigma;
+% convert cm/s2 to g's
+lny    = lny - log(980.66);
 
 function [lny,sigma]=gmpe(index,M,rrup)
 DATA = [5.6897 1.1178 -0.50 -0.0060
@@ -78,7 +75,4 @@ DATA = [5.6897 1.1178 -0.50 -0.0060
 C     = DATA(index,:);
 lny   = C(1)+ C(2)*(M-6) + C(3)*log(rrup) + C(4)*rrup;
 sigma = 0.17*ones(size(M));  % check with Miguel
-
-% convert cm/s2 to g's
-lny    = lny-log(980.66);
 

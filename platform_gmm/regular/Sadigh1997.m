@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig]=Sadigh1997(To,M,rrup,mechanism,media)
+function[lny,sigma,tau,phi]=Sadigh1997(To,M,rrup,mechanism,media)
 
 % Sadigh, K., Chang, C. Y., Egan, J. A., Makdisi, F., & Youngs, R. R.
 % (1997). Attenuation relationships for shallow crustal earthquakes
@@ -10,14 +10,12 @@ function[lny,sigma,tau,sig]=Sadigh1997(To,M,rrup,mechanism,media)
 % mechanism ='reverse/thrust', 'strike-slip'
 % media     = 'rock','deepsoil'
 
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if To<0 || To > 4
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -39,8 +37,6 @@ else
     sigma      = interp1(x,Y_sigma,log(To))';
 end
 
-tau = sigma*0;
-sig = sigma;
 function[lny,sigma]=gmpe(index,M,rrup,mechanism,media)
 
 switch lower(media)

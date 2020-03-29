@@ -41,6 +41,7 @@ if license('test','Distrib_Computing_Toolbox')
             fprintf(spat,ID1,ID2,ID3,toc(ti));
         end
     end
+    save haz2 MRE
     
     parfor i=isPCE
         ti=tic;
@@ -87,6 +88,5 @@ if nargin==6
         MREPCE{i}=MREPCE{i}(idx,:,:,:,:);
     end
 end
-
 
 

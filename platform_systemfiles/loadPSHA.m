@@ -35,7 +35,7 @@ data(emptylist,:)=[];
 data=regexprep(data,' +',' ');
 
 % computes option pointers
-ptrs = nan(15,2);
+ptrs = nan(16,2);
 for i=1:size(data,1)
     if strfind(data{i,1},'Option 0 '), ptrs(1,1) =i;end
     if strfind(data{i,1},'Option 1 '), ptrs(2,1) =i;end
@@ -52,6 +52,7 @@ for i=1:size(data,1)
     if strfind(data{i,1},'Option 12 '),ptrs(13,1)=i;end % psda (optional)
     if strfind(data{i,1},'Option 13 '),ptrs(14,1)=i;end % psda (optional)
     if strfind(data{i,1},'Option 14 '),ptrs(15,1)=i;end % validation (optional)
+    if strfind(data{i,1},'Option 15 '),ptrs(16,1)=i;end % SPC (optional)
 end
 ptrs = FindEndPtrs(ptrs,data);
 
@@ -426,6 +427,7 @@ Ns    = size(str,1);
 y(1:Ns)=struct(...
     'label',[],...
     'datasource',[],...
+    'datasourceindx',[],...
     'type',[],...
     'mechanism',[],...
     'surface' ,[],...
@@ -483,9 +485,11 @@ for i=1:Ns
         y(i).datasource = [];
     else
         z=load(line{B(3)});
-        z=z.geom(i);
+        datasourceindx=str2double(line{10});
+        z=z.geom(datasourceindx);
         y(i).vertices = z.vertices;
         y(i).datasource = line{B(3)};
+        y(i).datasourceindx = datasourceindx;
     end
 end
 

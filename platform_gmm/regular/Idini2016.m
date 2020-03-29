@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig] = Idini2016(To,M,R,h,mechanism,spectrum,Vs30)
+function[lny,sigma,tau,phi] = Idini2016(To,M,R,h,mechanism,spectrum,Vs30)
 
 % Benjamn Idini, Fabian Rojas, Sergio Ruiz, Cesar Pasten
 %
@@ -9,15 +9,12 @@ function[lny,sigma,tau,sig] = Idini2016(To,M,R,h,mechanism,spectrum,Vs30)
 % mechanism = 'interface' 'intraslab'
 % spectrum  = 'sI','sII','sIII','sIV','sV','sVI'
 % Vs30      = Shear wave velocity averaged over the upper 30 m
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
 
 if  To<0 || To> 10
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -28,7 +25,7 @@ T_hi    = min(period(period>=To));
 index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
-    [lny,sigma,tau,sig] = gmpe(index,M,R,h,mechanism,spectrum,Vs30);
+    [log10y,sigma,tau,phi] = gmpe(index,M,R,h,mechanism,spectrum,Vs30);
 else
     [lny_lo,sigma_lo,tau_lo] = gmpe(index,  M,R,h,mechanism,spectrum,Vs30);
     [lny_hi,sigma_hi,tau_hi] = gmpe(index+1,M,R,h,mechanism,spectrum,Vs30);
@@ -36,13 +33,20 @@ else
     Y_sa       = [lny_lo,lny_hi]';
     Y_sigma    = [sigma_lo,sigma_hi]';
     Y_tau      = [tau_lo,tau_hi]';
-    lny        = interp1(x,Y_sa,log(To))';
+    log10y     = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
     tau        = interp1(x,Y_tau,log(To))';
-    sig        = sqrt(sigma.^2-tau.^2);
+    phi        = sqrt(sigma.^2-tau.^2);
 end
 
-function[lnSa,sigma,tau,sig]=gmpe(index,M,R,h,mechanism,spectrum,Vs30)
+% log base conversion
+lny    = log10y * log(10);
+sigma  = sigma  * log(10);
+tau    = tau    * log(10);
+phi    = phi    * log(10);
+
+
+function[log10y,sigma,tau,phi]=gmpe(index,M,R,h,mechanism,spectrum,Vs30)
 
 %   1        2       3       4       5       6           7           8         9         10     11       12         13      14      15      16
 %   sII      sIII	 sIV	 sV	     sVI	 c3          c5          dc3	   sigmar	 c1     c2       c9         c8      dc1     dc2     sigmae
@@ -90,9 +94,9 @@ c9     = C(12);
 c8     = C(13);
 dc1    = C(14);
 dc2    = C(15);
-sig    = C(16)*ones(size(M));
+phi    = C(16)*ones(size(M));
 
-sigma = sqrt(tau.^2+sig.^2);
+sigma = sqrt(tau.^2+phi.^2);
 ho     = 50; %km 
 Vref   = 1530; %m/s
 c4     = 0.1;
@@ -117,8 +121,6 @@ FD=g.*log10(R+Ro)+c5*R;
 FS = sTa*log10(Vs30/Vref);
 
 % model regresion
-lnSa  = log(10)*(FF+FD+FS);
-
-
+log10y  = (FF+FD+FS);
 
 

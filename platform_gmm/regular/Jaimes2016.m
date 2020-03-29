@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig]=Jaimes2016(To,M,rrup)
+function[lny,sigma,tau,phi]=Jaimes2016(To,M,rrup)
 
 %Jaimes, M.A., Lermo, J. y García-Soto, A. (2016). Ground-Motion Prediction Model from Local Earthquakes
 %of the Mexico Basin at the Hill Zone of Mexico City, Bulletin of the Seismological Society of America,
@@ -11,14 +11,12 @@ function[lny,sigma,tau,sig]=Jaimes2016(To,M,rrup)
 % mechanism ='intraslab'
 % media     = 'rock' for specifically Mexico City
 
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if  and(To<0 || To> 10,To~=-1)
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -42,8 +40,14 @@ else
     sigma      = interp1(x,Y_sigma,log(To))';
 end
 
-tau=0*sigma;
-sig=sigma;
+% convert cm/s2 to g's
+if To==-1
+    lny    = lny-log(100);
+end
+
+if To>=0
+    lny    = lny-log(980.66);
+end
 
 function [lny,sigma]=gmpe(index,M,rrup)
 DATA = [
@@ -77,8 +81,3 @@ DATA = [
 C       = DATA(index,:);
 lny     = C(1)+ C(2)*M + C(3)*log(rrup) + C(4)*rrup;
 sigma   = C(5)*ones(size(M));
-
-% convert cm/s2 to g's, and keeps cm/s for PGV
-if index~=1
-    lny    = lny-log(980.66);
-end

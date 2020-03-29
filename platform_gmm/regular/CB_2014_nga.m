@@ -1,18 +1,15 @@
-function [lny, sigma,tau,sig] = CB_2014_nga(To, M, Rrup, Rjb, Rx, W, Ztor, Zbot, delta, mechanism, HWEffect, Vs30, Z25, Zhyp, reg)
+function [lny, sigma,tau,phi] = CB_2014_nga(To, M, Rrup, Rjb, Rx, W, Ztor, Zbot, delta, mechanism, HWEffect, Vs30, Z25, Zhyp, reg)
 
 % Kenneth W. Campbell and Yousef Bozorgnia (2014) NGA-West2 Ground Motion 
 % Model for the Average Horizontal Components of PGA, PGV, and 5% Damped 
 % Linear Acceleration Response Spectra. Earthquake Spectra: August 2014, 
 % Vol. 30, No. 3, pp. 1087-1115.
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
 
 if  and(To<0 || To> 10,To~=-1)
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -31,7 +28,7 @@ index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
     [lny,sigma,tau] = gmpe(index,  M, Rrup, Rjb, Rx, W, Ztor,  Zbot, delta, mechanism, HWEffect, Vs30, Z25, Zhyp,reg);
-    sig        = sqrt(sigma.^2-tau.^2);
+    phi        = sqrt(sigma.^2-tau.^2);
 else
     [lny_lo,sigma_lo,tau_lo] = gmpe(index,   M, Rrup, Rjb, Rx, W, Ztor,  Zbot, delta, mechanism, HWEffect, Vs30, Z25, Zhyp,reg);
     [lny_hi,sigma_hi,tau_hi] = gmpe(index+1, M, Rrup, Rjb, Rx, W, Ztor,  Zbot, delta, mechanism, HWEffect, Vs30, Z25, Zhyp,reg);
@@ -42,7 +39,7 @@ else
     lny        = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
     tau        = interp1(x,Y_tau,log(To))';
-    sig        = sqrt(sigma.^2-tau.^2);
+    phi        = sqrt(sigma.^2-tau.^2);
 end
 
 if To<0.25

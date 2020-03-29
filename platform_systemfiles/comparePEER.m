@@ -6,6 +6,9 @@ lambdaTest(lambdaTest==0)=nan;
 im         = handles.opt.im';
 lambda     = nansum(handles.MRE,4);
 lambda(isnan(lambdaTest))=NaN;
+if numel(lambdaTest)~=numel(lambda)
+    return
+end
 Error      = abs((lambdaTest-lambda)./lambdaTest*100);
 % Error(lambdaTest==lambda)=0;
 Acc        = num2cell(Error<=5);

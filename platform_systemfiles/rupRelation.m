@@ -16,12 +16,24 @@ switch lower(model)
         A      = 10.^logA;
         
     case 'hanksbakun2001'
-        a=1.00; b =3.98; sigma = 0.12; a2=4/3; b2= 3.09;
+        a  = 1.00; b  = 3.98; sigma = 0.12;
+        a2 = 4/3;  b2 = 3.09;
         log10A  = (M-b -sigma*epsilon)/a;
-        log10A2 = (M-b2-sigma*epsilon)/a2; A2  = 10.^log10A2;
-        A      = 10.^log10A;
-        ind    = (A>468);
-        A(ind) = A2(ind);
+        log10A2 = (M-b2-sigma*epsilon)/a2;
+        A       = 10.^log10A;
+        A2      = 10.^log10A2;
+        ind     = (A>468);
+        A(ind)  = A2(ind);
+        
+    case 'hanksbakun2008'
+        a  = 1.00; b  = 3.98; sigma = 0.12;
+        a2 = 4/3;  b2 = 3.07;
+        log10A  = (M-b -sigma*epsilon)/a;
+        log10A2 = (M-b2-sigma*epsilon)/a2;
+        A       = 10.^log10A;
+        A2      = 10.^log10A2;
+        ind     = (A>537);
+        A(ind)  = A2(ind);        
         
     case 'somerville1999'
         a=1.00; b =3.95; sigma = 0.12;

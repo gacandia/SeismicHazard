@@ -1,4 +1,4 @@
-function[lny,sigma,tau,sig]=BCHydro2012(To,M,R,h,mechanism,region,DeltaC1,Vs30)
+function[lny,sigma,tau,phi]=BCHydro2012(To,M,R,h,mechanism,region,DeltaC1,Vs30)
 
 %Abrahamson, N., Gregor, N., & Addo, K. (2012). BC Hydro Ground Motion 
 % Prediction Equations for Subduction Earthquakes. Earthquake Spectra.
@@ -12,14 +12,12 @@ function[lny,sigma,tau,sig]=BCHydro2012(To,M,R,h,mechanism,region,DeltaC1,Vs30)
 % DeltaC1   = 'lower','central','upper','none'
 % Vs30      = Shear wave velocity averaged over the upper 30 m 
 
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if  To<0 || To> 10
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 To      = max(To,0.01); %PGA is associated to To=0.01;
@@ -29,7 +27,7 @@ T_hi    = min(period(period>=To));
 index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
-    [lny,sigma,tau,sig] = gmpe(index,M,R,h,mechanism,region,DeltaC1,Vs30);
+    [lny,sigma,tau,phi] = gmpe(index,M,R,h,mechanism,region,DeltaC1,Vs30);
 else
     [lny_lo,sigma_lo,tau_lo] = gmpe(index,  M,R,h,mechanism,region,DeltaC1,Vs30);
     [lny_hi,sigma_hi,tau_hi] = gmpe(index+1,M,R,h,mechanism,region,DeltaC1,Vs30);
@@ -40,7 +38,7 @@ else
     lny        = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
     tau        = interp1(x,Y_tau,log(To))';
-    sig        = sqrt(sigma.^2-tau.^2);
+    phi        = sqrt(sigma.^2-tau.^2);
 end
 
 function[lnSa,sigma,tau,sig]=gmpe(index,M,R,h,mechanism,region,DeltaC1,Vs30)

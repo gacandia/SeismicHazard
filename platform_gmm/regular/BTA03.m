@@ -5,11 +5,11 @@ function [lny,sigma,tau,phi] = BTA03(T,Mw,Rrup,mechanism,media)
 % structural dynamics, 32(7), 1133-1155.
 % DOI: https://doi.org/10.1002/eqe.270
 
+lny         = nan(size(Mw));
+sigma       = nan(size(Mw));
+tau         = nan(size(Mw));
+phi         = nan(size(Mw));
 if T~=-5
-    lny         = nan(size(Mw));
-    sigma       = nan(size(Mw));
-    tau         = nan(size(Mw));
-    phi         = nan(size(Mw));
     return
 end
 
@@ -26,13 +26,11 @@ s22     =0.334;
 f1      =-0.166;
 f2      =0.512;
 
-
 switch media % SGS site category 
     case 'sgs-b', SC = 0; SD = 0; phi1 = 1.18;  phi2 = 0.94;
     case 'sgs-c', SC = 1; SD = 0; phi1 = 1.17;  phi2 = 0.93;
     case 'sgs-d', SC = 0; SD = 1; phi1 = 0.96;  phi2 = 0.73;
 end
-
 
 switch mechanism % SGS site category 
     case 'strike-slip',     FN = 0; FR = 0; 
@@ -50,8 +48,7 @@ phi = phi1-0.106*(log(Ia)-log(0.0132));
 phi(Ia<=0.013) = phi2;
 phi(Ia>=0.125) = phi2;
 
-tau = 0.611 - 0.047*(Mw-4.7);
-
+tau   = 0.611 - 0.047*(Mw-4.7);
 sigma = sqrt(phi.^2+tau.^2);   %Total error
 
 

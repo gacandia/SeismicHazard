@@ -5,12 +5,12 @@ function [lny,sigma,tau,phi] = FG15(T,Mw,Rrup,H,mechanism,style_faulting,Vs30,re
 % earthquakes considering single?station sigma and within?event spatial
 % correlation. Bulletin of the Seismological Society of America, 105(4), 1903-1918.
 % DOI: https://doi.org/10.1785/0120140316
+lny   = nan(size(Mw));
+sigma = nan(size(Mw));
+tau   = nan(size(Mw));
+phi   = nan(size(Mw));
 
 if T~=-5 && T~=-4
-    lny   = nan(size(Mw));
-    sigma = nan(size(Mw));
-    tau   = nan(size(Mw));
-    phi   = nan(size(Mw));
     return
 end
 

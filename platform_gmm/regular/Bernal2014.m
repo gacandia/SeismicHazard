@@ -1,13 +1,11 @@
-function[lny,sigma,tau,sig]=Bernal2014(To,M,rrup,H,mechanism)
+function[lny,sigma,tau,phi]=Bernal2014(To,M,rrup,H,mechanism)
+
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
 
 if  To<0 || To> 8
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
@@ -29,8 +27,9 @@ else
     sigma      = interp1(x,Y_sigma,log(To))';
 end
 
-tau=0*sigma;
-sig=sigma;
+% convert cm/s2 to g's
+lny = lny-log(980.66);
+
 
 function [lny,sigma]=gmpe(index,M,rrup,H,mechanism)
 
@@ -360,9 +359,6 @@ cH    = -2;
 SA    = interp2(r,m,data,rrup,M).*(1+exp(cH*H));
 lny   = log(SA);
 sigma = sig*ones(size(M));
-
-% convert cm/s2 to g's
-lny    = lny-log(980.66);
 
 
 

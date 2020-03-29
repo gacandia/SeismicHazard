@@ -1,30 +1,28 @@
-function[lny,sigma,tau,sig] = CampbellBozorgnia_2008_nga(To, M, rrup, rjb, ztor, dip, mechanism, Vs30, Z25, arb)
+function[lny,sigma,tau,phi] = CampbellBozorgnia_2008_nga(To, M, rrup, rjb, ztor, dip, mechanism, Vs30, Z25, arb)
 
 % Kenneth W. Campbell and Yousef Bozorgnia (2008) NGA Ground Motion 
 % Model for the Geometric Mean Horizontal Component of PGA, PGV, PGD and 5
 % Damped Linear Elastic Response Spectra for Periods Ranging from 
 % 0.01?to?10?s. Earthquake Spectra: February 2008, Vol. 24, No. 1, pp. 139-171.
+lny   = nan(size(M));
+sigma = nan(size(M));
+tau   = nan(size(M));
+phi   = nan(size(M));
+
 if  and(To<0 || To> 10,To~=-1 && To~=-10)
-    lny   = nan(size(M));
-    sigma = nan(size(M));
-    tau   = nan(size(M));
-    sig   = nan(size(M));
-    %IM    = IM2str(To);
-    %h=warndlg(sprintf('GMPE %s not available for %s',mfilename,IM{1}));
-    %uiwait(h);
     return
 end
 
 if To>=0
     To      = max(To,0.001); %PGA is associated to To=0.01;
 end
-period  = [-10 -1 0.001 0.01 0.02 0.03 0.05 0.075 0.1 0.15 0.2 0.25 0.3 0.4 0.5 0.75 1 1.5 2 3 4 5 7.5 10];
+period  = [-2 -1 0.001 0.01 0.02 0.03 0.05 0.075 0.1 0.15 0.2 0.25 0.3 0.4 0.5 0.75 1 1.5 2 3 4 5 7.5 10];
 T_lo    = max(period(period<=To));
 T_hi    = min(period(period>=To));
 index   = find(abs((period - T_lo)) < 1e-6); % Identify the period
 
 if T_lo==T_hi
-    [lny,sigma,tau,sig] = gmpe(index,M, rrup, rjb, ztor, dip, mechanism, Vs30, Z25, arb);
+    [lny,sigma,tau,phi] = gmpe(index,M, rrup, rjb, ztor, dip, mechanism, Vs30, Z25, arb);
 else
     [lny_lo,sigma_lo,tau_lo] = gmpe(index,  M, rrup, rjb, ztor, dip, mechanism, Vs30, Z25, arb);
     [lny_hi,sigma_hi,tau_hi] = gmpe(index+1,M, rrup, rjb, ztor, dip, mechanism, Vs30, Z25, arb);
@@ -35,7 +33,7 @@ else
     lny        = interp1(x,Y_sa,log(To))';
     sigma      = interp1(x,Y_sigma,log(To))';
     tau        = interp1(x,Y_tau,log(To))';
-    sig        = sqrt(sigma.^2-tau.^2);
+    phi        = sqrt(sigma.^2-tau.^2);
 end
 
 function[lny,sigma,tau,sig]=gmpe(index,M,rrup, rjb, ztor, dip, mechanism, Vs30, Z25, arb)
