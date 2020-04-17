@@ -27,7 +27,12 @@ MRE = permute(nansum(MRE,4),[2 5 1 3 4 ]);
 MRE = MRE(:,:,site_ptr);
 lnSat = zeros(1,Nmodels);
 for i=1:Nmodels
-    lnSat(i)=interp1(log(MRE(:,i)),log(opt.im),log(1/Tr),'pchip');
+    x = log(MRE(:,i));
+    y = log(opt.im);
+    II = isinf(x);
+    x = x(~II);
+    y = y(~II);
+    lnSat(i)=interp1(x,y,log(1/Tr),'pchip');
 end
 SaT = exp(lnSat*pkl);
 
